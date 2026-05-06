@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pandoc --track-changes=all \"QPB_Finance_Islamique_CEMAC.docx\" -o qpb_content.md)",
+      "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\BOZ\\\\Downloads\\\\NKAP SAVING\\\\src\\\\pages\\\\financeIslamique\" -Force)",
+      "WebFetch(domain:use.typekit.net)",
+      "PowerShell($video = \"C:\\\\Users\\\\BOZ\\\\Videos\\\\Compressé\\\\Any Video Converter\\\\Compress Video\\\\Enregistrement 2026-05-06 055235.mp4\"; Test-Path $video; \\(Get-Item $video\\).Length / 1MB)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}
