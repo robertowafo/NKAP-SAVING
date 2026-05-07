@@ -24,6 +24,8 @@ import RegisterInstitution from './pages/auth/RegisterInstitution';
 
 // Professionnel
 import DashboardInstitution from './pages/professionnel/DashboardInstitution';
+import EntrepriseHub from './pages/professionnel/EntrepriseHub';
+import DashboardEntreprise from './pages/professionnel/DashboardEntreprise';
 
 // Admin
 import DashboardAdmin from './pages/admin/DashboardAdmin';
@@ -90,9 +92,10 @@ export default function App() {
           <Route path="tableau-de-bord" element={<DashboardParticulier />} />
 
           {/* Professionnel */}
+          <Route path="professionnel" element={<EntrepriseHub />} />
+          <Route path="professionnel/entreprise" element={<DashboardEntreprise />} />
           <Route path="professionnel/tableau-de-bord" element={<DashboardInstitution />} />
           <Route path="professionnel/institution" element={<DashboardInstitution />} />
-          <Route path="professionnel" element={<BlankPlaceholder title="Espace Professionnel" />} />
 
           {/* Admin */}
           <Route path="admin" element={<DashboardAdmin />} />

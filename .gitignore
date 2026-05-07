@@ -7,3 +7,8 @@ coverage/
 .env*
 !.env.example
 ~$*
+*.mp4
+*.mov
+*.avi
+Docs/*.ps1
+.claude/

@@ -1,75 +1,95 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Building2, Wrench, Tractor, Package, CheckCircle2, AlertCircle } from 'lucide-react';
+import {
+  ShieldCheck, Building2, Wrench, Tractor, Package,
+  CheckCircle2, AlertCircle, ArrowRight, ChevronDown,
+  Clock, Banknote, FileText, ThumbsUp, TrendingDown, X
+} from 'lucide-react';
 
-const img = (name: string) => encodeURI(`/${name}`);
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
-  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] } }),
-};
+const img = (name: string) => encodeURI(`/images/${name}`);
 
 const PRODUITS = [
   {
     nom: 'Mourabaha Commerciale',
-    desc: "Financement d'achat de marchandises pour commerçants et artisans. L'institution achète le bien et vous le revend avec une marge connue à l'avance.",
+    emoji: '🛒',
+    desc: "L'institution achète le bien souhaité, puis vous le revend avec une marge fixe connue à l'avance. Parfait pour les stocks, marchandises, matières premières.",
     icon: Package,
     montant: '500K – 50M FCFA',
     duree: '6 – 36 mois',
     margeMax: '12% / an',
     image: img('Halal Commerce illustration.jpeg'),
-    secteurs: ['Commerce', 'Import/Export', 'Artisanat', 'Textile'],
-    accent: '#1A7A4A',
+    secteurs: ['Commerce', 'Import/Export', 'Artisanat'],
+    badge: 'Le plus demandé',
   },
   {
     nom: 'Ijara Équipement',
-    desc: "Leasing islamique pour l'acquisition d'équipements industriels, véhicules ou matériel agricole. Vous louez avec option d'achat au terme.",
+    emoji: '⚙️',
+    desc: "Vous louez un équipement (machine, véhicule, matériel médical…) avec option d'achat à terme. Aucun intérêt — vous payez un loyer halal.",
     icon: Wrench,
     montant: '1M – 200M FCFA',
     duree: '12 – 60 mois',
     margeMax: '10% / an',
     image: img('Ijara Equipment concept.jpeg'),
     secteurs: ['Industrie', 'Transport', 'BTP', 'Médical'],
-    accent: '#C8972B',
+    badge: 'Pour les pros',
   },
   {
     nom: 'Mourabaha Agricole',
-    desc: "Financement d'intrants agricoles, semences et matériels pour exploitants et coopératives de la zone CEMAC.",
+    emoji: '🌾',
+    desc: "Financement d'intrants, semences, engrais et petit équipement pour exploitants et coopératives. Taux préférentiels agriculture CEMAC.",
     icon: Tractor,
     montant: '250K – 25M FCFA',
     duree: '3 – 24 mois',
     margeMax: '8% / an',
-    image: img('Ijara Equipment concept.jpeg'),
-    secteurs: ['Agriculture', 'Élevage', 'Pêche', 'Agroalim.'],
-    accent: '#1A7A4A',
+    image: img('Hero visual — Community Impact.jpeg'),
+    secteurs: ['Agriculture', 'Élevage', 'Pêche'],
+    badge: 'Taux réduit',
   },
   {
     nom: 'Ijara Immobilier PME',
-    desc: "Financement de locaux commerciaux via leasing islamique. Location avec option d'achat — aucun intérêt, contrat transparent.",
+    emoji: '🏢',
+    desc: "Financez vos locaux professionnels (boutique, bureau, atelier) par leasing islamique. Optez pour l'achat au terme ou renouvelez le contrat.",
     icon: Building2,
     montant: '10M – 500M FCFA',
     duree: '24 – 120 mois',
     margeMax: '9% / an',
     image: img('Business handshake Islamic finance.jpeg'),
-    secteurs: ['Commerce', 'Industrie', 'Services', 'Santé'],
-    accent: '#C8972B',
+    secteurs: ['Commerce', 'Industrie', 'Services'],
+    badge: 'Long terme',
   },
 ];
 
 const ETAPES = [
-  { num: 1, titre: 'Dépôt de demande', desc: 'Remplissez le formulaire en ligne. Précisez le bien, le montant et votre secteur.', duree: '15 min', color: '#1A7A4A' },
-  { num: 2, titre: 'Analyse & Éligibilité', desc: 'QPB évalue votre dossier KYC/AML et vérifie la conformité Charia du bien.', duree: '24–48h', color: '#C8972B' },
-  { num: 3, titre: 'Offres partenaires', desc: 'Les institutions Islamic Window vous soumettent leurs offres de financement halal.', duree: '3–5 jours', color: '#1A7A4A' },
-  { num: 4, titre: 'Signature du contrat', desc: 'Signature électronique du contrat Mourabaha/Ijara avec avis du Comité Charia.', duree: '1 jour', color: '#C8972B' },
-  { num: 5, titre: 'Déblocage des fonds', desc: "L'institution achète le bien chez le fournisseur, puis vous le cède. Pas de versement direct.", duree: '2–5 jours', color: '#1A7A4A' },
+  { num: '01', icon: FileText, titre: 'Déposez votre demande', desc: 'Formulaire en ligne 15 min. Précisez le bien, le montant, votre secteur. Aucun document à envoyer à ce stade.', duree: '15 min' },
+  { num: '02', icon: ShieldCheck, titre: 'Vérification Charia', desc: 'QPB vérifie que le bien et le projet sont conformes. Exclusion automatique des activités haram (alcool, tabac, armement…).', duree: '24–48h' },
+  { num: '03', icon: ThumbsUp, titre: 'Offres des partenaires', desc: '2–4 institutions Islamic Window vous soumettent leurs propositions. Vous comparez et choisissez librement.', duree: '3–5 jours' },
+  { num: '04', icon: CheckCircle2, titre: 'Signature & déblocage', desc: 'Signature électronique du contrat halal certifié. Les fonds sont débloqués directement chez le fournisseur.', duree: '24h' },
 ];
 
-const PARTENAIRES = [
-  { nom: 'BGFI Bank', pays: 'Cameroun, Gabon, Congo', type: 'Islamic Window', status: 'Partenaire', color: '#1A7A4A' },
-  { nom: 'Afriland First Bank', pays: 'Cameroun', type: 'Islamic Window', status: 'Négociation', color: '#C8972B' },
-  { nom: 'Ecobank CEMAC', pays: 'Zone CEMAC', type: 'Partenaire régional', status: 'Étude', color: '#6b7280' },
+const COMPARATIF = [
+  { critere: 'Intérêt / taux variable', conventionnel: true, islamique: false },
+  { critere: 'Marge fixe transparente', conventionnel: false, islamique: true },
+  { critere: 'Bien physique identifiable', conventionnel: false, islamique: true },
+  { critere: 'Pénalité de retard bancaire', conventionnel: true, islamique: false },
+  { critere: 'Validation éthique du projet', conventionnel: false, islamique: true },
+  { critere: 'Certification Charia AAOIFI', conventionnel: false, islamique: true },
 ];
+
+const FAQS = [
+  { q: 'Quelle est la différence entre Mourabaha et un crédit classique ?', r: 'Dans un crédit classique, la banque vous prête de l\'argent et vous facture des intérêts (Riba — interdit en Islam). En Mourabaha, l\'institution achète elle-même le bien, puis vous le revend avec une marge fixe et transparente. Vous ne payez jamais d\'intérêt : vous remboursez un prix de vente convenu à l\'avance.' },
+  { q: 'Est-ce que l\'Ijara c\'est comme un crédit-bail classique ?', r: 'Similaire en apparence, mais différent en nature. Dans l\'Ijara, vous payez un loyer pour l\'usage d\'un bien (la banque en est propriétaire). Aucun intérêt, pas de pénalité abusive. L\'option d\'achat est séparée et optionnelle. Tout est transparent et validé Charia.' },
+  { q: 'Quels biens sont exclus du financement ?', r: 'Les biens haram : alcool, tabac, armement, jeux de hasard, pornographie, porc. Tous les projets sont vérifiés lors de l\'analyse Charia (étape 2). Si votre bien est exclu, nous vous le signalons immédiatement.' },
+  { q: 'Quelle est la durée minimum pour obtenir un financement ?', r: 'Une fois votre dossier complet soumis, notre Comité Charia analyse en 24–48h. Les offres partenaires arrivent sous 3–5 jours ouvrés. La signature et le déblocage s\'effectuent en 24h supplémentaires. Total : environ 1 semaine.' },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 0) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 function DemandeForm() {
   const [type, setType] = useState('mourabaha');
@@ -79,15 +99,15 @@ function DemandeForm() {
 
   if (submitted) {
     return (
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="rounded-3xl p-10 text-center bg-[#e8f5ee] border border-[#1A7A4A]/20">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 bg-[#1A7A4A]/10">
-          <CheckCircle2 className="w-8 h-8 text-[#1A7A4A]" />
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="rounded-[3rem] p-12 text-center bg-white border border-gray-100 shadow-xl">
+        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 bg-[#bef264]">
+          <CheckCircle2 className="w-10 h-10 text-black" />
         </div>
-        <h3 className="font-display font-black text-[#0a0a0a] text-2xl mb-3">Demande enregistrée !</h3>
-        <p className="text-gray-500 mb-8 text-sm leading-relaxed">
-          Votre demande de financement Charia-compatible a été transmise. Vous serez contacté sous 24–48h.
+        <h3 className="text-3xl font-black tracking-tighter mb-4">Demande enregistrée !</h3>
+        <p className="text-gray-500 mb-10 text-lg leading-relaxed">
+          Votre demande Charia-compatible a été transmise. Vous serez contacté sous 24–48h.
         </p>
-        <button onClick={() => setSubmitted(false)} className="px-8 py-3 rounded-full font-bold text-white text-sm bg-[#1A7A4A] hover:bg-[#145d38] transition-colors">
+        <button onClick={() => setSubmitted(false)} className="px-12 py-5 rounded-full font-black text-black text-lg bg-[#bef264] hover:scale-105 transition-all">
           Nouvelle demande
         </button>
       </motion.div>
@@ -95,317 +115,369 @@ function DemandeForm() {
   }
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="rounded-3xl p-8 border border-gray-100 bg-white shadow-sm space-y-6">
+    <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="rounded-[3rem] p-10 border border-gray-100 bg-white shadow-2xl shadow-black/5 space-y-8">
       <div>
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Type de financement</p>
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { val: 'mourabaha', label: 'Mourabaha', sub: 'Achat de bien' },
-            { val: 'ijara', label: 'Ijara', sub: 'Leasing islamique' },
-          ].map((opt) => (
+        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Type de financement</p>
+        <div className="grid grid-cols-2 gap-4">
+          {[{ val: 'mourabaha', label: 'Mourabaha', sub: 'Achat de bien' }, { val: 'ijara', label: 'Ijara', sub: 'Leasing islamique' }].map((opt) => (
             <button key={opt.val} type="button" onClick={() => setType(opt.val)}
-              className={`p-4 rounded-2xl border-2 text-left transition-all ${type === opt.val ? 'border-[#C8972B] bg-[#fef9ec]' : 'border-gray-100 bg-gray-50'}`}
-            >
-              <p className={`font-bold text-sm ${type === opt.val ? 'text-[#C8972B]' : 'text-gray-600'}`}>{opt.label}</p>
-              <p className="text-[10px] text-gray-400 font-medium">{opt.sub}</p>
+              className={`p-6 rounded-[2rem] border-2 text-left transition-all ${type === opt.val ? 'border-[#bef264] bg-[#bef264]/5' : 'border-gray-100 bg-gray-50'}`}>
+              <p className={`font-black text-lg ${type === opt.val ? 'text-black' : 'text-gray-400'}`}>{opt.label}</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{opt.sub}</p>
             </button>
           ))}
         </div>
       </div>
-
       <div>
-        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Secteur d'activité</label>
+        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Secteur d'activité</label>
         <select value={secteur} onChange={(e) => setSecteur(e.target.value)} required
-          className="w-full px-4 py-3 rounded-2xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#1A7A4A] bg-gray-50 text-gray-700 transition-colors">
+          className="w-full px-6 py-4 rounded-2xl border border-gray-100 text-sm font-bold focus:outline-none focus:border-[#bef264] bg-gray-50 text-gray-700">
           <option value="">Choisir un secteur...</option>
-          <option value="commerce">Commerce / Négoce</option>
-          <option value="agriculture">Agriculture / Élevage</option>
-          <option value="industrie">Industrie / BTP</option>
-          <option value="transport">Transport / Logistique</option>
-          <option value="services">Services / Santé</option>
-          <option value="artisanat">Artisanat / PME</option>
+          <option>Commerce / Négoce</option>
+          <option>Agriculture / Élevage</option>
+          <option>Industrie / BTP</option>
+          <option>Transport / Logistique</option>
+          <option>Services / Santé</option>
         </select>
       </div>
-
       <div>
-        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Montant souhaité (FCFA)</label>
+        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Montant souhaité (FCFA)</label>
         <input type="number" value={montant} onChange={(e) => setMontant(e.target.value)} required min="500000" step="100000" placeholder="Ex : 5 000 000"
-          className="w-full px-4 py-3 rounded-2xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#1A7A4A] bg-gray-50 placeholder:text-gray-300 transition-colors" />
+          className="w-full px-6 py-4 rounded-2xl border border-gray-100 text-sm font-bold focus:outline-none focus:border-[#bef264] bg-gray-50 placeholder:text-gray-300" />
       </div>
-
-      <div>
-        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Description du bien à financer</label>
-        <textarea required rows={3} placeholder="Ex : Achat de 2 tonnes de riz pour mon commerce à Douala..."
-          className="w-full px-4 py-3 rounded-2xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#1A7A4A] bg-gray-50 resize-none placeholder:text-gray-300 transition-colors" />
-      </div>
-
-      <div className="flex items-start gap-3 rounded-2xl p-4 bg-amber-50 border border-amber-200">
-        <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-[#C8972B]" />
-        <p className="text-xs font-medium text-amber-700">
-          Le bien financé ne doit pas être lié à l'alcool, le tabac, les armes, la pornographie ou les jeux de hasard pour être éligible au financement Halal.
+      <div className="flex items-start gap-4 rounded-[2rem] p-6 bg-[#0a0a0a] text-white">
+        <AlertCircle className="w-6 h-6 shrink-0 mt-1 text-[#bef264]" />
+        <p className="text-xs font-bold leading-relaxed text-white/70">
+          Le bien doit être conforme aux valeurs islamiques. Exclusion : alcool, tabac, armement, jeux de hasard.
         </p>
       </div>
-
-      <button type="submit" className="w-full py-4 rounded-full font-bold text-white text-sm bg-[#C8972B] hover:bg-[#a07020] transition-colors flex items-center justify-center gap-2">
-        <ShieldCheck className="w-5 h-5" />
+      <button type="submit" className="w-full py-5 rounded-full font-black text-black text-lg bg-[#bef264] hover:shadow-2xl hover:shadow-[#bef264]/40 transition-all flex items-center justify-center gap-3">
+        <ShieldCheck className="w-6 h-6" />
         Soumettre ma demande Halal
       </button>
     </form>
   );
 }
 
+function FaqItem({ faq, idx }: { faq: typeof FAQS[0]; idx: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={idx} className="border-b border-white/10 last:border-0">
+      <button onClick={() => setOpen(!open)} className="w-full flex justify-between items-center py-7 text-left gap-6">
+        <span className="font-black text-lg text-white leading-snug">{faq.q}</span>
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }}>
+          <ChevronDown className="w-5 h-5 text-white/40 shrink-0" />
+        </motion.div>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35 }} className="overflow-hidden">
+            <p className="text-white/50 text-lg leading-relaxed pb-8 max-w-2xl">{faq.r}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 export default function MourabahaPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white text-[#0a0a0a] overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-[#f4f4f0] text-[#0a0a0a] overflow-x-hidden selection:bg-[#bef264] selection:text-black">
 
-      {/* ── HERO ──────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex items-center px-4 sm:px-6 lg:px-8 pt-10 pb-16 overflow-hidden">
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, #fef9ec 0%, transparent 65%)' }} />
-          <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full" style={{ background: 'radial-gradient(circle, #dcf0e4 0%, transparent 70%)' }} />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_50%_0%,#1A7A4A30_0%,transparent_60%)]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,#bef26412_0%,transparent_60%)]" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
         </div>
-
-        <div className="max-w-7xl mx-auto w-full relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
-            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-              <Link to="/finance-islamique" className="inline-flex items-center gap-2 text-gray-400 text-xs font-semibold mb-10 hover:text-gray-700 transition-colors tracking-widest uppercase">
-                ← Finance Islamique
-              </Link>
-
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 border border-[#C8972B]/20 rounded-full text-[#C8972B] text-xs font-bold mb-8">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Zéro Intérêt — Conforme Charia
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 mb-8">
+          <Link to="/finance-islamique" className="inline-flex items-center gap-2 text-white/40 text-xs font-black hover:text-white/80 transition-colors tracking-[0.3em] uppercase">← Finance Islamique</Link>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="relative z-10 mb-10">
+          <div className="inline-flex items-center gap-2 px-5 py-2 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full text-[10px] font-black uppercase tracking-widest text-white">
+            <ShieldCheck className="w-4 h-4 text-[#bef264]" />Zéro Intérêt · Conforme Charia COBAC
+          </div>
+        </motion.div>
+        <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 font-black tracking-tighter leading-[0.85] mb-8 text-white" style={{ fontSize: 'clamp(64px, 11vw, 140px)' }}>
+          Mourabaha<br /><span className="text-white/18">& Ijara.</span>
+        </motion.h1>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}
+          className="relative z-10 text-white/60 text-xl leading-relaxed mb-10 max-w-xl mx-auto">
+          Financez votre activité sans intérêt. Marge transparente, bien physique garanti, validé par le Comité Charia.
+        </motion.p>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="relative z-10 flex flex-wrap gap-4 justify-center mb-20">
+          <a href="#demande" className="px-10 py-5 bg-[#bef264] text-black font-black rounded-full text-lg hover:scale-105 hover:shadow-2xl hover:shadow-[#bef264]/40 transition-all duration-300">
+            Faire une demande
+          </a>
+          <a href="#produits" className="px-10 py-5 bg-white/10 border border-white/25 text-white font-black rounded-full text-lg hover:bg-white/20 backdrop-blur-sm transition-all duration-300">
+            Voir les produits
+          </a>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 mb-0">
+          <motion.div animate={{ y: [0, -14, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
+            <div className="relative w-72 rounded-[2.5rem] overflow-hidden shadow-2xl bg-gradient-to-br from-[#0a2a1a] to-[#060d09]">
+              <div className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#bef264]" /><span className="text-[#bef264] text-[10px] font-black uppercase tracking-widest">PME · Halal</span></div>
+                  <ShieldCheck className="w-5 h-5 text-[#bef264]/50" />
+                </div>
+                <p className="text-white/60 text-xs font-black uppercase tracking-widest mb-2">Finançable CEMAC</p>
+                <p className="text-white text-4xl font-black tracking-tighter mb-1">500M</p>
+                <p className="text-[#bef264] text-sm font-black mb-8">FCFA · zéro intérêt</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white/10 rounded-2xl p-4"><p className="text-white/50 text-[10px] font-black uppercase mb-1">Durée</p><p className="text-white text-lg font-black">6–60 mois</p></div>
+                  <div className="bg-white/10 rounded-2xl p-4"><p className="text-white/50 text-[10px] font-black uppercase mb-1">Marge</p><p className="text-white text-lg font-black">3–6%</p></div>
+                </div>
               </div>
+            </div>
+          </motion.div>
+        </motion.div>
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f4f4f0] to-transparent pointer-events-none" />
+      </section>
 
-              <h1 className="font-display font-black tracking-tight leading-[0.9] mb-8" style={{ fontSize: 'clamp(48px, 8vw, 96px)' }}>
-                Mourabaha<br />
-                <span style={{ background: 'linear-gradient(135deg, #C8972B, #e0b050)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  & Ijara
-                </span>
-              </h1>
-
-              <p className="text-gray-500 text-lg leading-relaxed mb-10 max-w-md">
-                Financez vos projets professionnels sans payer d'intérêts. Marge transparente, connue dès le premier jour.
-                100% conforme Charia pour les PME CEMAC.
+      {/* ── EXPLICATION SIMPLE ────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1A7A4A] mb-6">Pour les novices</p>
+              <h2 className="text-5xl lg:text-6xl font-black tracking-tighter leading-none mb-8">
+                Financer sans<br />intérêt — comment<br />ça marche ?
+              </h2>
+              <p className="text-gray-500 text-xl leading-relaxed mb-6">
+                Vous voulez acheter une machine, un stock ou un local. Au lieu de vous prêter de l'argent avec intérêt, <strong className="text-[#0a0a0a]">QPB achète le bien à votre place</strong>, puis vous le revend avec une marge fixe, transparente, convenue à l'avance.
               </p>
-
-              <div className="flex flex-wrap gap-2 mb-10">
-                {['Zéro Riba', 'Transparence totale', 'PME & artisans', 'Islamic Window', 'COBAC conforme'].map((tag, i) => (
-                  <span key={i} className="px-3 py-1.5 rounded-full bg-amber-50 border border-[#C8972B]/15 text-[11px] font-bold text-[#C8972B]">{tag}</span>
+              <p className="text-gray-500 text-xl leading-relaxed mb-10">
+                Résultat : vous avez votre bien, vous remboursez en mensualités sans jamais payer d'intérêt. <strong className="text-[#0a0a0a]">Halal. Légal. Simple.</strong>
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { val: '500M FCFA', label: 'Maximum finançable' },
+                  { val: '48h', label: 'Délai de réponse' },
+                  { val: '0%', label: 'Intérêt facturé' },
+                  { val: '100%', label: 'Certifié Charia' },
+                ].map((s, i) => (
+                  <div key={i} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <p className="text-3xl font-black tracking-tighter text-[#1A7A4A] mb-1">{s.val}</p>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{s.label}</p>
+                  </div>
                 ))}
               </div>
-
-              <Link to="/inscription" className="group inline-flex items-center gap-2 px-8 py-4 bg-[#C8972B] text-white font-bold rounded-full text-sm hover:bg-[#a07020] transition-all hover:shadow-xl hover:shadow-[#C8972B]/25">
-                Demander un financement
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
             </motion.div>
-
-            {/* Right — image + example card */}
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }} className="relative h-[520px]">
-              <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-0 left-0 right-8 h-[380px] rounded-3xl overflow-hidden shadow-2xl shadow-black/10">
-                <img src={img('Hero visual — SME Financing.jpeg')} alt="Financement PME Halal" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-1">Financement PME</p>
-                  <p className="text-white font-display font-bold text-xl">500K – 500M FCFA</p>
+            <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative">
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
+                <img src={img('Hero visual — SME Financing.jpeg')} alt="Financement PME" className="w-full h-[550px] object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/70 via-transparent to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+                    <p className="text-[#bef264] text-xs font-black uppercase tracking-widest mb-2">Exemple réel</p>
+                    <p className="text-white font-black text-lg">Commerçant · Douala</p>
+                    <p className="text-white/60 text-sm mt-1">Mourabaha 15M FCFA — Remboursé en 24 mois. Aucun intérêt payé.</p>
+                  </div>
                 </div>
-              </motion.div>
-
-              {/* Floating example card */}
-              <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute bottom-24 -left-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 w-52">
-                <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Exemple Mourabaha</p>
-                <p className="text-xs text-gray-600 mb-1">Besoin : <span className="font-bold text-[#0a0a0a]">5 000 000 FCFA</span></p>
-                <p className="text-xs text-gray-600 mb-1">Marge : <span className="font-bold text-[#C8972B]">12% = 600 000 FCFA</span></p>
-                <p className="text-xs text-gray-600">Total : <span className="font-bold text-[#1A7A4A]">5 600 000 FCFA</span></p>
-                <p className="text-[9px] text-gray-400 mt-2">Connu dès le 1er jour — Zéro intérêt</p>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }} className="absolute bottom-6 right-4 flex items-center gap-2 bg-white rounded-2xl shadow-xl border border-gray-100 px-4 py-3">
-                <ShieldCheck className="w-4 h-4 text-[#C8972B]" />
-                <div>
-                  <p className="text-[9px] text-gray-400 font-bold uppercase">Certifié</p>
-                  <p className="text-xs font-bold text-[#C8972B]">Charia COBAC</p>
-                </div>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── PRODUITS GRID ─────────────────────────────────────────── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="mb-14">
-            <p className="text-[#C8972B] text-xs font-bold tracking-widest uppercase mb-3">Gamme</p>
-            <h2 className="font-display font-black text-[#0a0a0a] tracking-tight" style={{ fontSize: 'clamp(28px, 4.5vw, 52px)' }}>
-              4 produits Halal disponibles
+      {/* ── COMPARATIF HALAL vs CLASSIQUE ─────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">Comparatif</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              Halal vs Classique :<br />la différence.
             </h2>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {PRODUITS.map((produit, i) => {
-              const Icon = produit.icon;
-              return (
-                <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} whileHover={{ y: -4, transition: { duration: 0.2 } }}>
-                  <div className="group rounded-3xl overflow-hidden bg-white border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-black/5 transition-all">
-                    <div className="relative h-44 overflow-hidden">
-                      <img src={produit.image} alt={produit.nom} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
-                      <div className="absolute bottom-4 left-4 flex items-center gap-1.5">
-                        <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-white">
-                          <ShieldCheck className="w-2.5 h-2.5" /> Conforme Charia
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-6">
-                      <div className="flex items-start gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: produit.accent + '15' }}>
-                          <Icon className="w-5 h-5" style={{ color: produit.accent }} />
-                        </div>
-                        <h3 className="font-display font-black text-[#0a0a0a] text-xl mt-1">{produit.nom}</h3>
-                      </div>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-5">{produit.desc}</p>
-                      <div className="grid grid-cols-3 gap-2 mb-4">
-                        {[
-                          { label: 'Montant', value: produit.montant },
-                          { label: 'Durée', value: produit.duree },
-                          { label: 'Marge max', value: produit.margeMax },
-                        ].map((info, j) => (
-                          <div key={j} className="bg-gray-50 rounded-xl p-3">
-                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-1">{info.label}</p>
-                            <p className="text-xs font-bold text-[#0a0a0a] leading-tight">{info.value}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {produit.secteurs.map((s, j) => (
-                          <span key={j} className="text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: produit.accent + '12', color: produit.accent }}>
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PROCESS + FORM ────────────────────────────────────────── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
-
-          {/* Steps */}
-          <div>
-            <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <p className="text-[#C8972B] text-xs font-bold tracking-widest uppercase mb-3">Processus</p>
-              <h2 className="font-display font-black text-[#0a0a0a] tracking-tight mb-10" style={{ fontSize: 'clamp(24px, 3.5vw, 40px)' }}>
-                Comment ça fonctionne ?
-              </h2>
-            </motion.div>
-
-            <div className="relative space-y-4">
-              <div className="absolute left-5 top-5 bottom-5 w-px bg-gradient-to-b from-[#1A7A4A] via-[#C8972B] to-[#1A7A4A]" />
-              {ETAPES.map((etape, i) => (
-                <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex gap-5">
-                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm text-white shrink-0 z-10" style={{ backgroundColor: etape.color }}>
-                    {etape.num}
-                  </div>
-                  <div className="flex-1 bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                    <div className="flex justify-between items-start mb-1">
-                      <h3 className="font-bold text-[#0a0a0a] text-sm">{etape.titre}</h3>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ml-2 text-white" style={{ backgroundColor: etape.color }}>
-                        {etape.duree}
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs leading-relaxed">{etape.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Partners */}
-            <div className="mt-10">
-              <h3 className="font-display font-black text-[#0a0a0a] text-xl mb-5">Institutions partenaires</h3>
-              <div className="space-y-3">
-                {PARTENAIRES.map((p, i) => (
-                  <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                    className="flex items-center justify-between rounded-2xl p-4 border border-gray-100 bg-gray-50 hover:border-gray-200 hover:bg-white transition-all"
-                  >
-                    <div>
-                      <p className="font-bold text-[#0a0a0a] text-sm">{p.nom}</p>
-                      <p className="text-gray-400 text-xs">{p.pays} · {p.type}</p>
-                    </div>
-                    <span className="text-[10px] font-bold px-3 py-1 rounded-full text-white shrink-0" style={{ backgroundColor: p.color }}>
-                      {p.status}
-                    </span>
-                  </motion.div>
-                ))}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}
+            className="rounded-[2.5rem] overflow-hidden border border-white/10">
+            <div className="grid grid-cols-3 bg-white/5 border-b border-white/10">
+              <div className="p-6 text-white/30 text-[10px] font-black uppercase tracking-widest">Critère</div>
+              <div className="p-6 text-center border-l border-white/10">
+                <span className="text-red-400 text-xs font-black uppercase tracking-widest">Crédit classique</span>
+              </div>
+              <div className="p-6 text-center border-l border-white/10 bg-[#bef264]/5">
+                <span className="text-[#bef264] text-xs font-black uppercase tracking-widest">Mourabaha / Ijara</span>
               </div>
             </div>
-          </div>
-
-          {/* Form */}
-          <div>
-            <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <p className="text-[#C8972B] text-xs font-bold tracking-widest uppercase mb-3">Demande</p>
-              <h2 className="font-display font-black text-[#0a0a0a] tracking-tight mb-8" style={{ fontSize: 'clamp(24px, 3.5vw, 40px)' }}>
-                Faire une demande
-              </h2>
-            </motion.div>
-            <DemandeForm />
-          </div>
-        </div>
-      </section>
-
-      {/* ── SPLIT IMAGE — Halal Commerce ──────────────────────────── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-            <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <p className="text-[#1A7A4A] text-xs font-bold tracking-widest uppercase mb-4">Commerce Éthique</p>
-              <h2 className="font-display font-black text-[#0a0a0a] tracking-tight leading-tight mb-6" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-                Le commerce halal<br />au cœur de la CEMAC
-              </h2>
-              <p className="text-gray-500 text-base leading-relaxed mb-8">
-                QPB finance uniquement des activités économiques conformes aux valeurs islamiques. Chaque transaction est vérifiée par notre équipe de conformité Charia avant approbation.
-              </p>
-              <ul className="space-y-3">
-                {[
-                  'Exclusion des secteurs haram (alcool, tabac, armes)',
-                  'Vérification de la licéité du bien financé',
-                  'Avis du Comité Charia joint à chaque dossier',
-                  'Audit de conformité annuel obligatoire',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-gray-600">
-                    <span className="text-[#1A7A4A] font-bold shrink-0 mt-0.5">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }} className="relative">
-              <div className="rounded-3xl overflow-hidden h-[420px] shadow-xl shadow-black/5">
-                <img src={img('Business handshake Islamic finance.jpeg')} alt="Partenariat islamique" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#C8972B]/20 to-transparent" />
-              </div>
-              <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 w-52">
-                <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Partenariat halal</p>
-                <p className="font-bold text-[#0a0a0a] text-sm">Marge connue<br />dès le premier jour</p>
-                <div className="flex items-center gap-1 mt-2">
-                  <ShieldCheck className="w-3 h-3 text-[#C8972B]" />
-                  <span className="text-[10px] text-[#C8972B] font-bold">Zéro intérêt caché</span>
+            {COMPARATIF.map((row, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.5}
+                className="grid grid-cols-3 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                <div className="p-6 text-white/70 font-bold text-sm">{row.critere}</div>
+                <div className="p-6 flex justify-center items-center border-l border-white/5">
+                  {row.conventionnel
+                    ? <span className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center"><TrendingDown className="w-4 h-4 text-red-400" /></span>
+                    : <span className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/20 text-xl font-black">—</span>
+                  }
+                </div>
+                <div className="p-6 flex justify-center items-center border-l border-white/5 bg-[#bef264]/3">
+                  {row.islamique
+                    ? <span className="w-8 h-8 rounded-full bg-[#bef264]/20 flex items-center justify-center"><CheckCircle2 className="w-4 h-4 text-[#bef264]" /></span>
+                    : <span className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/20 text-xl font-black">—</span>
+                  }
                 </div>
               </motion.div>
-            </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── 4 PRODUITS ───────────────────────────────────────────────────── */}
+      <section id="produits" className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1A7A4A] mb-6">Instruments Halal</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              4 produits pour<br />tous les besoins.
+            </h2>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {PRODUITS.map((p, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                whileHover={{ y: -10 }}
+                className="group bg-white rounded-[3rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500">
+                <div className="relative h-64 overflow-hidden">
+                  <img src={p.image} alt={p.nom} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute top-6 left-6">
+                    <span className="px-4 py-2 bg-[#bef264] rounded-full text-[10px] font-black text-black uppercase">{p.badge}</span>
+                  </div>
+                  <div className="absolute bottom-6 left-6">
+                    <span className="text-4xl">{p.emoji}</span>
+                  </div>
+                </div>
+                <div className="p-10">
+                  <div className="flex justify-between items-start mb-5">
+                    <h3 className="text-2xl font-black tracking-tighter group-hover:text-[#1A7A4A] transition-colors">{p.nom}</h3>
+                  </div>
+                  <p className="text-gray-500 text-base leading-relaxed mb-8">{p.desc}</p>
+                  <div className="grid grid-cols-3 gap-3 mb-8">
+                    {[{ l: 'Montant', v: p.montant }, { l: 'Durée', v: p.duree }, { l: 'Marge max', v: p.margeMax }].map((info, j) => (
+                      <div key={j} className="bg-gray-50 rounded-2xl p-4 text-center">
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">{info.l}</p>
+                        <p className="text-sm font-black text-[#0a0a0a]">{info.v}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {p.secteurs.map((s, j) => (
+                      <span key={j} className="px-3 py-1.5 bg-[#1A7A4A]/10 text-[#1A7A4A] rounded-full text-[10px] font-black uppercase tracking-widest">{s}</span>
+                    ))}
+                  </div>
+                  <a href="#demande" className="flex items-center justify-center gap-2 w-full py-4 bg-[#0a0a0a] text-white font-black rounded-full text-sm hover:bg-[#1A7A4A] transition-all duration-300">
+                    Demander ce financement <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── IMAGE IMMERSIVE ───────────────────────────────────────────────── */}
+      <section className="relative h-[50vh] min-h-[350px] overflow-hidden">
+        <img src={img('Halal Commerce illustration.jpeg')} alt="Commerce halal" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-l from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent" />
+        <div className="absolute inset-0 flex items-center justify-end px-8 lg:px-20">
+          <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="max-w-lg text-right">
+            <p className="text-[#bef264] text-xs font-black uppercase tracking-[0.3em] mb-4">Commerce éthique</p>
+            <h2 className="text-4xl lg:text-5xl font-black tracking-tighter text-white leading-tight mb-6">
+              Croissez sans compromettre vos valeurs.
+            </h2>
+            <a href="#demande" className="inline-flex items-center gap-3 px-8 py-4 bg-[#bef264] text-black font-black rounded-full text-base hover:scale-105 transition-all duration-300">
+              Obtenir un financement halal <ArrowRight className="w-5 h-5" />
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── PROCESSUS EN 4 ÉTAPES ─────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1A7A4A] mb-6">Procédure</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              De la demande<br />au financement.
+            </h2>
+          </motion.div>
+          <div className="space-y-6">
+            {ETAPES.map((e, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                whileHover={{ x: 8 }}
+                className="flex items-center gap-8 bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#bef264]/30 transition-all duration-300 group">
+                <div className="w-20 h-20 rounded-[1.5rem] bg-[#0a0a0a] group-hover:bg-[#bef264] flex items-center justify-center shrink-0 transition-colors duration-300">
+                  <e.icon className="w-10 h-10 text-white group-hover:text-black transition-colors duration-300" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-2">
+                    <span className="text-5xl font-black text-gray-100 tracking-tighter leading-none">{e.num}</span>
+                    <h3 className="text-2xl font-black tracking-tighter">{e.titre}</h3>
+                  </div>
+                  <p className="text-gray-500 text-lg leading-relaxed">{e.desc}</p>
+                </div>
+                <div className="shrink-0 flex flex-col items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#1A7A4A]" />
+                  <span className="text-[10px] font-black text-[#1A7A4A] uppercase tracking-widest text-center">{e.duree}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FORMULAIRE & FAQ ──────────────────────────────────────────────── */}
+      <section id="demande" className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div>
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="mb-12">
+                <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">Demande en ligne</p>
+                <h2 className="text-5xl lg:text-6xl font-black tracking-tighter leading-none">
+                  Faites votre<br />demande en<br />2 minutes.
+                </h2>
+              </motion.div>
+              <DemandeForm />
+            </div>
+            <div>
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1} className="mb-12">
+                <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">FAQ</p>
+                <h2 className="text-5xl lg:text-6xl font-black tracking-tighter leading-none">
+                  Vos questions,<br />nos réponses.
+                </h2>
+              </motion.div>
+              <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10">
+                {FAQS.map((faq, i) => <FaqItem key={i} faq={faq} idx={i} />)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ────────────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="relative rounded-[4rem] overflow-hidden">
+            <img src={img('Business handshake Islamic finance.jpeg')} alt="" className="w-full h-[450px] object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0a1a0f]/95 via-[#0a1a0f]/80 to-transparent" />
+            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
+              <h2 className="text-5xl lg:text-7xl font-black tracking-tighter text-white leading-none mb-8">
+                Financement halal<br />dès aujourd'hui.
+              </h2>
+              <p className="text-white/60 text-xl mb-10 max-w-xl">500 000 FCFA à 500 000 000 FCFA. Réponse en 48h. Aucun intérêt.</p>
+              <a href="#demande" className="px-12 py-6 bg-[#bef264] text-black font-black rounded-full text-xl hover:scale-105 hover:shadow-2xl hover:shadow-[#bef264]/30 transition-all duration-300">
+                Démarrer ma demande maintenant
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
 

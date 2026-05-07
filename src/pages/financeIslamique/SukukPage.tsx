@@ -1,13 +1,13 @@
-import { motion } from 'motion/react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Lock, TrendingUp, Home, Building2, Leaf, ChevronRight } from 'lucide-react';
+import {
+  ShieldCheck, Lock, TrendingUp, Home, Building2, Leaf,
+  ChevronRight, Globe, Zap, CheckCircle2, ArrowRight,
+  ChevronDown, Star, Users, Coins, BarChart3, Clock
+} from 'lucide-react';
 
-const img = (name: string) => encodeURI(`/${name}`);
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
-  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] } }),
-};
+const img = (name: string) => encodeURI(`/images/${name}`);
 
 const PROJECTS = [
   {
@@ -18,11 +18,13 @@ const PROJECTS = [
     maturity: '5 ans',
     price: '10 000 FCFA',
     progress: 23,
+    raised: '115M FCFA',
+    target: '500M FCFA',
     status: 'Pilote',
-    statusColor: '#1A7A4A',
+    statusColor: '#bef264',
     image: img('Sukuk Ijara concept.jpeg'),
     icon: Home,
-    validated: true,
+    desc: 'Immeuble résidentiel 48 appartements. Revenus de loyer distribués trimestriellement.',
   },
   {
     name: 'Entrepôt Al-Baraka',
@@ -32,11 +34,13 @@ const PROJECTS = [
     maturity: '7 ans',
     price: '10 000 FCFA',
     progress: 7,
+    raised: '35M FCFA',
+    target: '500M FCFA',
     status: 'Nouveau',
-    statusColor: '#C8972B',
+    statusColor: '#1A7A4A',
     image: img('Al-Baraka Warehouse.jpeg'),
     icon: Building2,
-    validated: false,
+    desc: 'Entrepôt logistique 5 000 m². Contrats de location signés avec 3 entreprises.',
   },
   {
     name: 'Plantation Kribi',
@@ -46,301 +50,501 @@ const PROJECTS = [
     maturity: '10 ans',
     price: '10 000 FCFA',
     progress: 1,
+    raised: '5M FCFA',
+    target: '500M FCFA',
     status: 'Pré-lancement',
-    statusColor: '#1A7A4A',
+    statusColor: '#6b7280',
     image: img('Plantation Kribi.jpeg'),
     icon: Leaf,
-    validated: false,
+    desc: '120 hectares de palmiers. Export certifié Halal vers marché GCC.',
   },
 ];
 
-const COMPARISON = [
-  { critere: 'Rémunération', conv: 'Intérêt fixe (coupon)', islam: "Part des loyers / bénéfices de l'actif" },
-  { critere: 'Propriété', conv: "Créance sur l'émetteur", islam: "Quote-part de propriété dans l'actif" },
-  { critere: 'Garantie', conv: "Bonne foi de l'émetteur", islam: 'Actif sous-jacent réel et identifié' },
-  { critere: 'Risque', conv: 'Risque de défaut émetteur', islam: 'Risque partagé proportionnel à la part' },
-  { critere: 'Charia', conv: 'Non — Riba interdit', islam: 'Oui — validé Comité Charia ✓' },
+const TYPES_SUKUK = [
+  {
+    nom: 'Sukuk Ijara',
+    emoji: '🏗️',
+    desc: 'Vous achetez une part d\'un bien immobilier (bâtiment, entrepôt…). Les loyers perçus vous sont redistribués périodiquement.',
+    exemple: 'Résidence Al-Amal — 8% / an',
+    avantages: ['Revenu régulier (loyers)', 'Actif physique identifiable', 'Risque modéré'],
+    gradient: 'from-[#1A7A4A] to-[#0a2a15]',
+  },
+  {
+    nom: 'Sukuk Moucharaka',
+    emoji: '🤝',
+    desc: 'Vous co-investissez dans une entreprise ou projet. Les profits ET les pertes sont partagés équitablement.',
+    exemple: 'Entrepôt Al-Baraka — 9.5% / an',
+    avantages: ['Potentiel de gain plus élevé', 'Participation directe', 'Éthique totale'],
+    gradient: 'from-[#1a1a2e] to-[#0a0a0a]',
+  },
+  {
+    nom: 'Sukuk Moudaraba',
+    emoji: '📈',
+    desc: 'Vous apportez le capital, un gestionnaire expert le fait fructifier. Le profit est partagé selon un ratio fixé à l\'avance.',
+    exemple: 'Bientôt disponible',
+    avantages: ['Gestion déléguée', 'Aucune expertise requise', 'Rapport qualité/risque optimal'],
+    gradient: 'from-[#2a0a4a] to-[#0d060a]',
+  },
 ];
 
-const STEPS = [
-  { num: '01', title: "Sélection de l'actif", desc: 'QPB identifie un actif réel (immeuble, entrepôt, plantation) certifié Charia.', color: '#1A7A4A' },
-  { num: '02', title: 'Tokenisation Sukuk', desc: 'Le bien est tokenisé en parts égales (ERC-20 Polygon). Token = quote-part de propriété.', color: '#C8972B' },
-  { num: '03', title: 'Validation Charia', desc: 'Le Comité Charia valide le smart contract, le prospectus et la structure juridique.', color: '#1A7A4A' },
-  { num: '04', title: 'Visa COSUMAF', desc: 'QPB soumet le dossier à la COSUMAF. Section Charia intégrée au prospectus.', color: '#C8972B' },
-  { num: '05', title: 'Distribution auto', desc: 'Loyers/bénéfices distribués automatiquement via smart contract, sans intérêt.', color: '#1A7A4A' },
+const ETAPES = [
+  { num: '01', titre: 'Créez votre compte', desc: 'Inscription en 3 minutes. Vérification d\'identité simple (pièce + selfie). 100% en ligne.', duree: '3 min', icon: Users },
+  { num: '02', titre: 'Choisissez un projet', desc: 'Parcourez les Sukuk disponibles. Chaque fiche détaille l\'actif, le rendement, la durée et le Comité Charia.', duree: '5 min', icon: BarChart3 },
+  { num: '03', titre: 'Investissez dès 10 000 FCFA', desc: 'Saisissez votre montant. Paiement sécurisé par Mobile Money ou virement. Zéro frais cachés.', duree: '2 min', icon: Coins },
+  { num: '04', titre: 'Recevez vos revenus', desc: 'Loyers ou profits distribués automatiquement sur votre portefeuille. Traçabilité complète on-chain.', duree: 'Automatique', icon: TrendingUp },
 ];
+
+const GARANTIES = [
+  { icon: ShieldCheck, titre: 'Actif réel en garantie', desc: 'Chaque Sukuk est adossé à un bien physique identifié, évalué et enregistré. Pas de spéculation.' },
+  { icon: Lock, titre: 'Smart contract Polygon', desc: 'Distribution automatique des revenus via blockchain. Impossible à falsifier. Transparence totale.' },
+  { icon: Star, titre: 'Certifié Charia AAOIFI', desc: 'Validé par 3 scholars indépendants avant lancement. Zéro intérêt (Riba), zéro incertitude (Gharar).' },
+  { icon: Globe, titre: 'Régulé COSUMAF', desc: 'Conforme au Règlement DEEP 2025. Dossier de visa réglementaire CEMAC en cours de dépôt.' },
+];
+
+const FAQS = [
+  { q: 'C\'est quoi exactement un Sukuk ?', r: 'Un Sukuk est l\'équivalent islamique d\'une obligation. Au lieu de prêter de l\'argent contre intérêt (interdit en Islam), vous achetez une part de propriété dans un actif réel (immeuble, entrepôt, plantation). Vous recevez ensuite les revenus générés par cet actif : loyers, profits…' },
+  { q: 'Quelle est la différence avec une obligation classique ?', r: 'Une obligation classique = prêt d\'argent avec intérêt fixe (Riba — interdit). Un Sukuk = participation à un actif réel, revenus liés à la performance. Le risque est partagé, les gains sont halal.' },
+  { q: 'Puis-je perdre mon capital ?', r: 'Comme tout investissement, un risque existe. Cependant, chaque Sukuk est adossé à un actif physique qui sert de garantie. En cas de défaillance, l\'actif peut être liquidé pour rembourser les porteurs de Sukuk.' },
+  { q: 'Comment sont payés les revenus ?', r: 'Les revenus (loyers Sukuk Ijara, profits Sukuk Moucharaka) sont distribués automatiquement via smart contract sur Polygon, directement sur votre portefeuille NKAP. Vous recevez une notification et un relevé à chaque distribution.' },
+  { q: 'Le minimum de 10 000 FCFA est-il vraiment accessible ?', r: 'Absolument. Nous avons volontairement fixé ce minimum pour permettre aux jeunes actifs de la zone CEMAC d\'accéder à ces investissements. Vous pouvez investir dans plusieurs Sukuk simultanément pour diversifier.' },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 0) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
+
+function FaqItem({ faq, idx }: { faq: typeof FAQS[0]; idx: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <motion.div
+      initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={idx}
+      className="border-b border-gray-200 last:border-0"
+    >
+      <button onClick={() => setOpen(!open)} className="w-full flex justify-between items-center py-7 text-left gap-6">
+        <span className="font-black text-lg text-[#0a0a0a] leading-snug">{faq.q}</span>
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }}>
+          <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />
+        </motion.div>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="text-gray-500 text-lg leading-relaxed pb-8 max-w-2xl">{faq.r}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
 
 export default function SukukPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white text-[#0a0a0a] overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-[#f4f4f0] text-[#0a0a0a] font-sans selection:bg-[#bef264] selection:text-black">
 
-      {/* ── HERO ──────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] flex items-center px-4 sm:px-6 lg:px-8 pt-10 pb-16 overflow-hidden">
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, #dcf0e4 0%, transparent 65%)' }} />
-          <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full" style={{ background: 'radial-gradient(circle, #fef9ec 0%, transparent 70%)' }} />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_50%_0%,#1A7A4A30_0%,transparent_60%)]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,#bef26412_0%,transparent_60%)]" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
-            {/* Left */}
-            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-              <Link to="/finance-islamique" className="inline-flex items-center gap-2 text-gray-400 text-xs font-semibold mb-10 hover:text-gray-700 transition-colors tracking-widest uppercase">
-                ← Finance Islamique
-              </Link>
+        <div className="relative z-10 max-w-4xl mx-auto w-full">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-4 mb-10">
+            <Link to="/finance-islamique" className="text-white/40 text-[10px] font-black tracking-[0.3em] uppercase hover:text-white/80 transition-colors">← Finance Islamique</Link>
+            <div className="w-1 h-1 rounded-full bg-white/20" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full text-[10px] font-black uppercase tracking-widest text-white">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#bef264]" />
+              Certifié AAOIFI · Blockchain Polygon
+            </div>
+          </motion.div>
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#e8f5ee] border border-[#1A7A4A]/20 rounded-full text-[#1A7A4A] text-xs font-bold mb-8">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Conforme Charia AAOIFI · Blockchain Polygon
+          <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="font-black tracking-tighter leading-[0.88] mb-8 text-white" style={{ fontSize: 'clamp(52px, 9vw, 108px)' }}>
+            Créez du<br />patrimoine<br /><span className="text-white/18">sans le bruit.</span>
+          </motion.h1>
+
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }} className="text-white/60 text-lg lg:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
+            Le Sukuk est l'alternative halal à l'obligation. Investissez dans des actifs réels en zone CEMAC dès <strong className="text-white">10 000 FCFA</strong>.
+          </motion.p>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap gap-4 justify-center mb-16">
+            <Link to="/inscription" className="px-9 py-4 bg-[#bef264] text-black font-black rounded-full text-base hover:scale-105 hover:shadow-2xl hover:shadow-[#bef264]/40 transition-all duration-300">
+              Investir dès 10 000 FCFA
+            </Link>
+            <a href="#projets" className="px-9 py-4 bg-white/10 border border-white/20 text-white font-bold rounded-full text-base hover:bg-white/20 backdrop-blur-sm transition-all">
+              Voir les projets
+            </a>
+          </motion.div>
+
+          {/* Stats bar */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
+            className="flex flex-wrap justify-center gap-8 mb-16">
+            {[
+              { val: '8–11%', label: 'Rendement annuel' },
+              { val: '10 000 F', label: 'Ticket minimum' },
+              { val: '100%', label: 'Halal certifié' },
+              { val: '0', label: 'Frais cachés' },
+            ].map((s, i) => (
+              <div key={i} className="text-center">
+                <p className="text-white font-black text-2xl tracking-tighter">{s.val}</p>
+                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mt-1">{s.label}</p>
               </div>
+            ))}
+          </motion.div>
+        </div>
 
-              <h1 className="font-display font-black tracking-tight leading-[0.9] mb-8" style={{ fontSize: 'clamp(52px, 8vw, 96px)' }}>
-                Sukuk<br />
-                <span style={{ background: 'linear-gradient(135deg, #1A7A4A, #2da55e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  Tokenisés
-                </span>
-              </h1>
+        {/* Floating card */}
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.9 }}
+          className="relative z-10 w-full max-w-sm mx-auto">
+          <motion.div animate={{ y: [0, -14, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            className="relative w-full rounded-[2.5rem] bg-gradient-to-br from-[#1A7A4A] to-[#060d09] overflow-hidden" style={{ height: '340px' }}>
+            <div className="absolute inset-0 flex flex-col justify-between p-10">
+              <div className="flex justify-between items-start">
+                <div className="px-4 py-2 bg-white/10 border border-white/20 rounded-full text-[9px] font-black text-white/70 uppercase tracking-widest">Sukuk Token</div>
+                <ShieldCheck className="w-8 h-8 text-[#bef264]" />
+              </div>
+              <div>
+                <p className="text-white font-mono text-sm mb-5 tracking-wider opacity-50">0x8842...SUKUK</p>
+                <p className="text-[#bef264] text-[10px] font-black uppercase tracking-widest mb-1">Sukuk Pilote</p>
+                <p className="text-white font-black tracking-tighter" style={{ fontSize: 'clamp(24px, 5vw, 40px)' }}>500 000 000 FCFA</p>
+                <p className="text-white/50 text-sm font-bold mt-2">Rendement : 8–11% / an · Certifié AAOIFI</p>
+              </div>
+            </div>
+            <div className="absolute -right-16 -top-16 w-56 h-56 border-[24px] border-[#bef264]/10 rounded-full" />
+            <div className="absolute -left-10 -bottom-10 w-40 h-40 border-[16px] border-white/5 rounded-full" />
+          </motion.div>
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f4f4f0] to-transparent pointer-events-none" />
+        </motion.div>
+      </section>
 
-              <p className="text-gray-500 text-lg leading-relaxed mb-10 max-w-md">
-                L'équivalent islamique de l'obligation. Vous percevez les loyers d'un actif réel.
-                Chaque token = une part de propriété certifiée Charia sur Blockchain Polygon.
+      {/* ── C'EST QUOI UN SUKUK ? ────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Image */}
+            <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+              className="relative order-2 lg:order-1">
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
+                <img src={img('Blockchain + Islamic Finance.jpeg')} alt="Sukuk Blockchain" className="w-full h-[500px] object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
+                    <p className="text-white/60 text-xs font-black uppercase tracking-widest mb-2">Différence clé</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-red-500/20 rounded-xl p-3 text-center">
+                        <p className="text-white text-xs font-black">Obligation classique</p>
+                        <p className="text-red-300 text-[10px] mt-1">Prêt + intérêt = Haram ❌</p>
+                      </div>
+                      <div className="bg-[#bef264]/20 rounded-xl p-3 text-center">
+                        <p className="text-white text-xs font-black">Sukuk NKAP</p>
+                        <p className="text-[#bef264] text-[10px] mt-1">Part d'actif = Halal ✓</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Decorative badge */}
+              <motion.div animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 6, repeat: Infinity }}
+                className="absolute -top-6 -right-6 w-24 h-24 bg-[#bef264] rounded-[2rem] flex items-center justify-center shadow-xl">
+                <img src={img('Islamic Star Ornament-Photoroom.png')} alt="" className="w-14 h-14 object-contain" />
+              </motion.div>
+            </motion.div>
+
+            {/* Text */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+              className="order-1 lg:order-2">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1A7A4A] mb-6">Pour les novices</p>
+              <h2 className="text-5xl lg:text-6xl font-black tracking-tighter leading-none mb-8">
+                Le Sukuk,<br />expliqué simplement.
+              </h2>
+              <p className="text-gray-500 text-xl leading-relaxed mb-8">
+                Imaginez que vous achetez une <strong className="text-[#0a0a0a]">part d'un immeuble</strong> avec d'autres investisseurs. Cet immeuble génère des loyers. Ces loyers vous sont redistribués proportionnellement à votre part.
               </p>
-
-              <div className="flex flex-wrap gap-2 mb-10">
-                {['Zéro Riba', 'Actif sous-jacent réel', 'Smart contract AAOIFI', 'Revenus automatiques', 'Polygon Mainnet'].map((tag, i) => (
-                  <span key={i} className="px-3 py-1.5 rounded-full bg-[#e8f5ee] border border-[#1A7A4A]/15 text-[11px] font-bold text-[#1A7A4A]">{tag}</span>
+              <p className="text-gray-500 text-xl leading-relaxed mb-10">
+                C'est exactement ça un Sukuk — sauf que tout est <strong className="text-[#0a0a0a]">digitalisé sur blockchain</strong>, transparent, et certifié conforme à la Charia.
+              </p>
+              <div className="space-y-4">
+                {[
+                  'Pas d\'intérêt (Riba) — 100% halal',
+                  'Actif physique réel en garantie',
+                  'Revenus tracés on-chain, immuables',
+                  'Accessible dès 10 000 FCFA',
+                ].map((point, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-6 h-6 rounded-full bg-[#bef264] flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-black" />
+                    </div>
+                    <p className="font-bold text-lg text-[#0a0a0a]">{point}</p>
+                  </div>
                 ))}
               </div>
-
-              <Link to="/inscription" className="group inline-flex items-center gap-2 px-8 py-4 bg-[#1A7A4A] text-white font-bold rounded-full text-sm hover:bg-[#145d38] transition-all hover:shadow-xl hover:shadow-[#1A7A4A]/25">
-                Souscrire à un Sukuk
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-
-            {/* Right — image + floating cards */}
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }} className="relative h-[520px]">
-              <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-0 left-0 right-8 h-[380px] rounded-3xl overflow-hidden shadow-2xl shadow-black/10">
-                <img src={img('Hero visual — Tokenized Real Estate.jpeg')} alt="Sukuk tokenisé" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6">
-                  <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-1">Sukuk Pilote QPB</p>
-                  <p className="text-white font-display font-bold text-xl">500 000 000 FCFA</p>
-                </div>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute bottom-28 -left-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 w-48">
-                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Rendement Sukuk</p>
-                <p className="font-display font-black text-[#1A7A4A] text-2xl">8–11%<span className="text-sm text-gray-400 font-normal"> / an</span></p>
-                <div className="flex items-center gap-1 mt-2">
-                  <TrendingUp className="w-3 h-3 text-[#1A7A4A]" />
-                  <span className="text-[10px] text-[#1A7A4A] font-bold">Loyers halal</span>
-                </div>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }} className="absolute bottom-6 right-4 flex items-center gap-2 bg-white rounded-2xl shadow-xl border border-gray-100 px-4 py-3">
-                <ShieldCheck className="w-4 h-4 text-[#1A7A4A]" />
-                <div>
-                  <p className="text-[9px] text-gray-400 font-bold uppercase">Certifié</p>
-                  <p className="text-xs font-bold text-[#1A7A4A]">Charia AAOIFI</p>
-                </div>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }} className="absolute top-4 -right-2 bg-[#C8972B] text-white rounded-2xl shadow-xl px-4 py-3">
-                <p className="text-[10px] font-bold text-white/60 mb-0.5">50 000 tokens</p>
-                <p className="font-display font-black text-lg">10 000 <span className="text-sm font-normal text-white/60">FCFA</span></p>
-              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── PROJECTS ──────────────────────────────────────────────── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="mb-14">
-            <p className="text-[#C8972B] text-xs font-bold tracking-widest uppercase mb-3">Projets pilotes</p>
-            <h2 className="font-display font-black text-[#0a0a0a] tracking-tight" style={{ fontSize: 'clamp(28px, 4.5vw, 52px)' }}>
-              Sukuk disponibles
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PROJECTS.map((project, i) => {
-              const Icon = project.icon;
-              return (
-                <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} whileHover={{ y: -5, transition: { duration: 0.2 } }}>
-                  <div className="group rounded-3xl overflow-hidden bg-white border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-black/5 transition-all">
-                    {/* Image */}
-                    <div className="relative h-48 overflow-hidden">
-                      <img src={project.image} alt={project.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
-                      <div className="absolute top-4 left-4">
-                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full text-white" style={{ backgroundColor: project.statusColor }}>{project.status}</span>
-                      </div>
-                      {project.validated && (
-                        <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/90 rounded-full px-2.5 py-1">
-                          <ShieldCheck className="w-3 h-3 text-[#1A7A4A]" />
-                          <span className="text-[9px] font-bold text-[#1A7A4A]">Halal</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6">
-                      <div className="flex items-start gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-[#e8f5ee] flex items-center justify-center shrink-0">
-                          <Icon className="w-5 h-5 text-[#1A7A4A]" />
-                        </div>
-                        <div>
-                          <h3 className="font-display font-black text-[#0a0a0a] text-lg leading-tight">{project.name}</h3>
-                          <p className="text-gray-400 text-xs font-medium mt-0.5">{project.location} · {project.type}</p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-2 mb-4">
-                        {[
-                          { label: 'Rendement', value: project.yield, highlight: true },
-                          { label: 'Maturité', value: project.maturity, highlight: false },
-                          { label: '/ Sukuk', value: project.price, highlight: false },
-                        ].map((info, j) => (
-                          <div key={j} className="bg-gray-50 rounded-xl p-2.5">
-                            <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">{info.label}</p>
-                            <p className={`text-xs font-bold ${info.highlight ? 'text-[#1A7A4A]' : 'text-[#0a0a0a]'}`}>{info.value}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="mb-5">
-                        <div className="flex justify-between text-xs font-bold text-gray-400 mb-1.5">
-                          <span>Financé à {project.progress}%</span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                          <div className="h-full rounded-full bg-[#1A7A4A]" style={{ width: `${project.progress}%` }} />
-                        </div>
-                      </div>
-
-                      <Link to="/inscription" className="group/btn flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-bold text-white text-sm bg-[#1A7A4A] hover:bg-[#145d38] transition-colors">
-                        <TrendingUp className="w-4 h-4" /> Souscrire
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+      {/* ── 3 TYPES DE SUKUK ─────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#1A7A4A] blur-[150px] opacity-15" />
         </div>
-      </section>
-
-      {/* ── PROCESS ───────────────────────────────────────────────── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
-            <p className="text-[#1A7A4A] text-xs font-bold tracking-widest uppercase mb-3">Processus</p>
-            <h2 className="font-display font-black text-[#0a0a0a] tracking-tight" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-              Comment fonctionne un Sukuk QPB ?
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">Nos structures</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              3 types de Sukuk,<br />1 principe éthique.
             </h2>
           </motion.div>
 
-          <div className="relative">
-            <div className="hidden lg:block absolute top-6 left-[3rem] right-[3rem] h-px bg-gradient-to-r from-[#1A7A4A] via-[#C8972B] to-[#1A7A4A]" />
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-              {STEPS.map((step, i) => (
-                <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xs font-black mb-5 relative z-10" style={{ backgroundColor: step.color }}>
-                    {step.num}
-                  </div>
-                  <h3 className="font-bold text-[#0a0a0a] text-sm mb-2">{step.title}</h3>
-                  <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── COMPARISON ────────────────────────────────────────────── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="mb-12">
-            <p className="text-[#C8972B] text-xs font-bold tracking-widest uppercase mb-3">Comparatif</p>
-            <h2 className="font-display font-black text-[#0a0a0a] tracking-tight" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-              Sukuk vs Obligation conventionnelle
-            </h2>
-          </motion.div>
-
-          <div className="rounded-3xl overflow-hidden border border-gray-100 bg-white shadow-sm">
-            <div className="grid grid-cols-3 p-5 border-b border-gray-100 bg-gray-50">
-              <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">Critère</p>
-              <p className="text-gray-400 text-xs font-bold uppercase tracking-widest text-center">Obligation classique</p>
-              <p className="text-[#1A7A4A] text-xs font-bold uppercase tracking-widest text-center">Sukuk Islamique ✓</p>
-            </div>
-            {COMPARISON.map((row, i) => (
-              <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-3 p-5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                <p className="font-bold text-[#0a0a0a] text-sm">{row.critere}</p>
-                <p className="text-gray-400 text-sm text-center">{row.conv}</p>
-                <p className={`text-sm font-bold text-center ${row.islam.startsWith('Oui') ? 'text-[#1A7A4A]' : 'text-[#0a0a0a]'}`}>{row.islam}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {TYPES_SUKUK.map((t, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className={`relative rounded-[2.5rem] bg-gradient-to-br ${t.gradient} p-10 border border-white/10 overflow-hidden group cursor-pointer`}>
+                <div className="absolute top-0 right-0 w-48 h-48 rounded-full border-[24px] border-white/5 translate-x-16 -translate-y-16" />
+                <div className="text-5xl mb-8">{t.emoji}</div>
+                <h3 className="text-2xl font-black tracking-tighter mb-4">{t.nom}</h3>
+                <p className="text-white/60 text-base leading-relaxed mb-8">{t.desc}</p>
+                <div className="space-y-3 mb-10">
+                  {t.avantages.map((a, j) => (
+                    <div key={j} className="flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#bef264]" />
+                      <span className="text-white/80 text-sm font-bold">{a}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-6 border-t border-white/10">
+                  <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Exemple NKAP</p>
+                  <p className="text-[#bef264] font-black text-sm">{t.exemple}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── BLOCKCHAIN DARK STRIP ─────────────────────────────────── */}
-      <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[#0a1a0f] overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={img('Blockchain + Islamic Finance.jpeg')} alt="" className="w-full h-full object-cover opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a1a0f] via-[#0a1a0f]/90 to-[#0a1a0f]/60" />
-        </div>
+      {/* ── COMMENT ÇA MARCHE ─────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1A7A4A] mb-6">Procédure</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              Investir en<br />4 étapes simples.
+            </h2>
+          </motion.div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-            <motion.div custom={0} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <p className="text-[#4ade80] text-xs font-bold tracking-widest uppercase mb-4">Technologie</p>
-              <h2 className="font-display font-black text-white leading-tight mb-6" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-                Blockchain + Charia<br /><span className="text-[#4ade80]">la synergie parfaite</span>
-              </h2>
-              <p className="text-white/50 text-base leading-relaxed mb-8">
-                La blockchain Polygon garantit la transparence et l'exécution automatique des distributions — au cœur des valeurs de la finance islamique. Chaque ligne du smart contract est validée par le Comité Charia.
-              </p>
-              <ul className="space-y-4">
-                {[
-                  { icon: ShieldCheck, text: 'Aucun intérêt caché dans le smart contract' },
-                  { icon: Lock, text: 'Actif sous-jacent enregistré on-chain via IPFS' },
-                  { icon: TrendingUp, text: 'Distribution automatique des loyers/bénéfices' },
-                  { icon: ShieldCheck, text: 'Avis Charia stocké sur IPFS — auditabilité totale' },
-                ].map((item, i) => {
-                  const Icon = item.icon;
-                  return (
-                    <li key={i} className="flex items-center gap-3 text-sm text-white/60">
-                      <Icon className="w-4 h-4 shrink-0 text-[#4ade80]" /> {item.text}
-                    </li>
-                  );
-                })}
-              </ul>
-            </motion.div>
-
-            <motion.div custom={1} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-4">
-              <div className="rounded-2xl p-5 border border-white/10 bg-white/5 backdrop-blur-sm">
-                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-2">Smart Contract Sukuk ERC-20</p>
-                <code className="text-sm font-mono text-[#4ade80]">0x1A7A4A...SukukQPB</code>
-                <p className="text-white/25 text-xs mt-2">Polygon Mainnet · Validé Comité Charia · AAOIFI Compliant</p>
-              </div>
-              <div className="rounded-2xl p-5 border border-white/10 bg-white/5 backdrop-blur-sm">
-                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-3">Dernière distribution Halal</p>
-                <div className="flex justify-between text-sm">
-                  <span className="text-white/50">Résidence Al-Amal — Loyers mai 2026</span>
-                  <span className="font-bold text-[#4ade80]">+380 FCFA / Sukuk</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {ETAPES.map((e, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                whileHover={{ y: -8 }}
+                className="group relative bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#1A7A4A]/10 transition-all duration-500">
+                {/* Connector line */}
+                {i < 3 && <div className="hidden lg:block absolute top-16 left-full w-6 h-0.5 bg-gray-200 z-10" />}
+                <div className="w-16 h-16 rounded-[1.5rem] bg-[#0a0a0a] group-hover:bg-[#bef264] flex items-center justify-center mb-8 transition-colors duration-300">
+                  <e.icon className="w-8 h-8 text-white group-hover:text-black transition-colors duration-300" />
                 </div>
-                <p className="text-white/25 text-[10px] mt-1">01/05/2026 · Distribué automatiquement · Conforme Charia</p>
-              </div>
-              <div className="flex items-start gap-3 text-xs text-white/30 rounded-2xl p-4 border border-white/10 bg-white/5">
-                <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-[#C8972B]" />
-                Visa COSUMAF en cours d'obtention. Chaque Sukuk fait l'objet d'une convention notariée et d'un avis formel du Comité Charia.
-              </div>
-            </motion.div>
+                <div className="text-5xl font-black text-gray-100 mb-4 tracking-tighter">{e.num}</div>
+                <h3 className="text-xl font-black tracking-tighter mb-3">{e.titre}</h3>
+                <p className="text-gray-500 text-base leading-relaxed mb-6">{e.desc}</p>
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#bef264]/10 rounded-full">
+                  <Clock className="w-3.5 h-3.5 text-[#1A7A4A]" />
+                  <span className="text-[10px] font-black text-[#1A7A4A] uppercase tracking-widest">{e.duree}</span>
+                </div>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── PROJETS DISPONIBLES ───────────────────────────────────────────── */}
+      <section id="projets" className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-20">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-4">Opportunités actives</p>
+              <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+                Choisissez votre<br />Sukuk.
+              </h2>
+            </motion.div>
+            <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}
+              className="text-white/50 text-lg max-w-sm">
+              Chaque projet est audité, validé Charia et publié avec sa fiche technique complète.
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {PROJECTS.map((p, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                whileHover={{ y: -10 }}
+                className="group bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-500">
+                <div className="relative h-56 overflow-hidden">
+                  <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute top-6 left-6 flex gap-2">
+                    <span className="px-3 py-1.5 rounded-full text-[10px] font-black uppercase" style={{ backgroundColor: p.statusColor, color: p.statusColor === '#bef264' ? 'black' : 'white' }}>
+                      {p.status}
+                    </span>
+                    <span className="px-3 py-1.5 bg-white/10 border border-white/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase text-white">
+                      {p.type}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-8">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-black tracking-tighter">{p.name}</h3>
+                      <p className="text-white/40 text-xs font-bold uppercase tracking-widest mt-1">{p.location}</p>
+                    </div>
+                    <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                      <p.icon className="w-6 h-6 text-[#bef264]" />
+                    </div>
+                  </div>
+                  <p className="text-white/50 text-sm leading-relaxed mb-6">{p.desc}</p>
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    {[
+                      { label: 'Rendement', value: p.yield, color: '#bef264' },
+                      { label: 'Durée', value: p.maturity, color: 'white' },
+                      { label: 'Min.', value: p.price, color: 'white' },
+                    ].map((stat, j) => (
+                      <div key={j} className="bg-white/5 rounded-xl p-3 text-center border border-white/10">
+                        <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-1">{stat.label}</p>
+                        <p className="font-black text-sm" style={{ color: stat.color }}>{stat.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mb-6">
+                    <div className="flex justify-between text-[10px] font-black uppercase text-white/30 mb-2">
+                      <span>{p.raised} collectés</span>
+                      <span className="text-[#bef264]">{p.progress}%</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                      <motion.div initial={{ width: 0 }} whileInView={{ width: `${p.progress}%` }} transition={{ duration: 1.2, delay: 0.3 + i * 0.1 }}
+                        className="h-full bg-[#bef264] rounded-full" />
+                    </div>
+                    <p className="text-white/20 text-[10px] mt-1 text-right">Objectif : {p.target}</p>
+                  </div>
+                  <Link to="/inscription" className="flex items-center justify-center gap-2 w-full py-4 bg-[#bef264] text-black font-black rounded-full text-sm hover:scale-105 hover:shadow-xl hover:shadow-[#bef264]/20 transition-all duration-300">
+                    Souscrire <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── IMAGE IMMERSIVE ───────────────────────────────────────────────── */}
+      <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
+        <img src={img('Hero visual — Tokenized Real Estate.jpeg')} alt="Immobilier tokenisé" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent" />
+        <div className="absolute inset-0 flex items-center px-8 lg:px-20">
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="max-w-xl">
+            <p className="text-[#bef264] text-xs font-black uppercase tracking-[0.3em] mb-6">Vision 2026</p>
+            <h2 className="text-4xl lg:text-6xl font-black tracking-tighter leading-tight text-white mb-6">
+              L'immobilier CEMAC tokenisé, accessible à tous.
+            </h2>
+            <p className="text-white/60 text-lg leading-relaxed mb-8">
+              Plus besoin de millions pour investir dans l'immobilier. 10 000 FCFA suffisent pour posséder une part de l'économie réelle africaine.
+            </p>
+            <Link to="/inscription" className="inline-flex items-center gap-3 px-8 py-4 bg-[#bef264] text-black font-black rounded-full text-base hover:scale-105 transition-all duration-300">
+              Rejoindre dès maintenant <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── GARANTIES ────────────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1A7A4A] mb-6">Sécurité</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              Votre argent est<br />protégé par design.
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {GARANTIES.map((g, i) => (
+              <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}
+                whileHover={{ x: 8 }}
+                className="flex items-start gap-8 p-10 bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#bef264]/30 transition-all duration-300 group">
+                <div className="w-16 h-16 rounded-[1.25rem] bg-[#0a0a0a] group-hover:bg-[#bef264] flex items-center justify-center shrink-0 transition-colors duration-300">
+                  <g.icon className="w-8 h-8 text-white group-hover:text-black transition-colors duration-300" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black tracking-tighter mb-3">{g.titre}</h3>
+                  <p className="text-gray-500 text-lg leading-relaxed">{g.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">Questions fréquentes</p>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
+              Tout ce que vous<br />voulez savoir.
+            </h2>
+          </motion.div>
+          <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 lg:p-16">
+            {FAQS.map((faq, i) => (
+              <div key={i} className="border-b border-white/10 last:border-0">
+                <FaqItem faq={{ ...faq }} idx={i} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ────────────────────────────────────────────────────── */}
+      <section className="py-32 px-6 bg-[#f4f4f0]">
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="relative rounded-[4rem] overflow-hidden">
+            <img src={img('BVMAC Stock Exchange Yaoundé.jpeg')} alt="BVMAC" className="w-full h-[500px] object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0a1a0f]/95 via-[#0a1a0f]/80 to-[#0a1a0f]/60" />
+            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
+              <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+                className="text-[#bef264] text-xs font-black uppercase tracking-[0.3em] mb-6">Commencer maintenant</motion.p>
+              <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
+                className="text-5xl lg:text-8xl font-black tracking-tighter text-white leading-none mb-8">
+                Votre premier Sukuk<br />vous attend.
+              </motion.h2>
+              <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }}
+                className="text-white/60 text-xl mb-12 max-w-xl">
+                Rejoignez 478 investisseurs CEMAC qui construisent leur patrimoine halal.
+              </motion.p>
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
+                className="flex flex-wrap gap-4 justify-center">
+                <Link to="/inscription" className="px-12 py-6 bg-[#bef264] text-black font-black rounded-full text-xl hover:scale-105 hover:shadow-2xl hover:shadow-[#bef264]/30 transition-all duration-300">
+                  Ouvrir mon compte gratuitement
+                </Link>
+                <Link to="/finance-islamique/comite-charia" className="px-12 py-6 bg-white/10 border border-white/20 text-white font-bold rounded-full text-xl hover:bg-white/20 backdrop-blur-sm transition-all">
+                  Voir les certifications
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
