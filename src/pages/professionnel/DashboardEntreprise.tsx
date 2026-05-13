@@ -136,30 +136,44 @@ export default function DashboardEntreprise() {
 
   const pct = Math.round((CROWDFUNDING_ACTIVE.collecte / CROWDFUNDING_ACTIVE.objectif) * 100);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
   return (
     <div className="flex min-h-screen bg-[#f4f4f0]">
 
       {/* SIDEBAR */}
-      <aside className="fixed top-0 left-0 h-full w-72 bg-[#0a0a0a] flex flex-col z-40 pt-20">
+      <aside 
+        className={cn(
+          "fixed top-6 left-6 h-[calc(100vh-3rem)] bg-[#0a0a0a] flex flex-col z-50 rounded-[2rem] transition-all duration-300 ease-in-out shadow-2xl overflow-hidden",
+          isSidebarOpen ? "w-72" : "w-24"
+        )}
+        onMouseEnter={() => setIsSidebarOpen(true)}
+        onMouseLeave={() => setIsSidebarOpen(false)}
+        onClick={() => setIsSidebarOpen(true)}
+      >
         {/* Company profile */}
-        <div className="px-6 py-6 border-b border-white/5">
-          <div className="flex items-center gap-3">
+        <div className={cn("py-6 border-b border-white/5 flex flex-col transition-all", isSidebarOpen ? "px-6" : "px-0 items-center")}>
+          <div className={cn("flex items-center", isSidebarOpen ? "gap-3" : "justify-center")}>
             <div className="w-12 h-12 bg-brand-neon rounded-2xl flex items-center justify-center font-display font-bold text-brand-dark text-xl shrink-0">
               T
             </div>
-            <div className="min-w-0">
-              <div className="font-bold text-white text-sm truncate">Tech Africa SARL</div>
-              <div className="text-[10px] text-white/40 font-medium">Technologie • Douala</div>
+            {isSidebarOpen && (
+              <div className="min-w-0">
+                <div className="font-bold text-white text-sm truncate">Tech Africa SARL</div>
+                <div className="text-[10px] text-white/40 font-medium">Technologie • Douala</div>
+              </div>
+            )}
+          </div>
+          {isSidebarOpen && (
+            <div className="mt-4 flex items-center gap-2">
+              <div className="w-2 h-2 bg-amber-400 rounded-full" />
+              <span className="text-[10px] text-white/50 font-medium whitespace-nowrap">KYC en cours de vérification</span>
             </div>
-          </div>
-          <div className="mt-4 flex items-center gap-2">
-            <div className="w-2 h-2 bg-amber-400 rounded-full" />
-            <span className="text-[10px] text-white/50 font-medium">KYC en cours de vérification</span>
-          </div>
+          )}
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-4 py-6 space-y-1">
+        <nav className={cn("flex-1 py-6 space-y-2 overflow-y-auto", isSidebarOpen ? "px-4" : "px-3")}>
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const active = activeTab === item.id;
@@ -168,23 +182,28 @@ export default function DashboardEntreprise() {
                 key={item.id}
                 onClick={() => setActiveTab(item.id as Tab)}
                 className={cn(
-                  'w-full flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold transition-all',
+                  'w-full flex items-center rounded-2xl text-sm font-bold transition-all group',
                   active
                     ? 'bg-brand-neon text-brand-dark'
-                    : 'text-white/50 hover:bg-white/5 hover:text-white'
+                    : 'text-white/50 hover:bg-white/5 hover:text-white',
+                  isSidebarOpen ? 'justify-between px-4 py-3' : 'justify-center p-3'
                 )}
+                title={!isSidebarOpen ? item.label : undefined}
               >
-                <span className="flex items-center gap-3">
-                  <Icon className="w-4 h-4" />
-                  {item.label}
-                </span>
-                {item.badge && (
+                <div className="flex items-center gap-3">
+                  <Icon className={cn("shrink-0", isSidebarOpen ? "w-4 h-4" : "w-6 h-6")} />
+                  {isSidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
+                </div>
+                {item.badge && isSidebarOpen && (
                   <span className={cn(
-                    'px-2 py-0.5 rounded-full text-[10px] font-bold',
+                    'px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0',
                     active ? 'bg-brand-dark text-brand-neon' : 'bg-brand-neon/20 text-brand-neon'
                   )}>
                     {item.badge}
                   </span>
+                )}
+                {item.badge && !isSidebarOpen && (
+                  <span className="absolute right-3 top-3 w-2.5 h-2.5 rounded-full bg-brand-neon" />
                 )}
               </button>
             );
@@ -192,18 +211,28 @@ export default function DashboardEntreprise() {
         </nav>
 
         {/* Bottom */}
-        <div className="px-4 py-6 border-t border-white/5 space-y-2">
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-white/40 hover:text-white text-xs font-bold rounded-xl hover:bg-white/5 transition-all">
-            <MessageSquare className="w-4 h-4" /> Support
+        <div className={cn("py-6 border-t border-white/5 space-y-2", isSidebarOpen ? "px-4" : "px-3")}>
+          <button className={cn(
+            "w-full flex items-center text-white/40 hover:text-white text-xs font-bold rounded-xl hover:bg-white/5 transition-all",
+            isSidebarOpen ? "gap-3 px-4 py-3" : "justify-center p-3"
+          )}
+          title={!isSidebarOpen ? "Support" : undefined}>
+            <MessageSquare className={cn("shrink-0", isSidebarOpen ? "w-4 h-4" : "w-6 h-6")} /> 
+            {isSidebarOpen && <span>Support</span>}
           </button>
-          <Link to="/professionnel" className="w-full flex items-center gap-3 px-4 py-3 text-white/40 hover:text-white text-xs font-bold rounded-xl hover:bg-white/5 transition-all">
-            <LogOut className="w-4 h-4" /> Quitter l'espace pro
+          <Link to="/professionnel" className={cn(
+            "w-full flex items-center text-white/40 hover:text-white text-xs font-bold rounded-xl hover:bg-white/5 transition-all",
+            isSidebarOpen ? "gap-3 px-4 py-3" : "justify-center p-3"
+          )}
+          title={!isSidebarOpen ? "Quitter l'espace pro" : undefined}>
+            <LogOut className={cn("shrink-0", isSidebarOpen ? "w-4 h-4" : "w-6 h-6")} /> 
+            {isSidebarOpen && <span className="whitespace-nowrap">Quitter l'espace pro</span>}
           </Link>
         </div>
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="ml-72 flex-1 min-h-screen">
+      <main className="ml-32 md:ml-36 lg:ml-[7.5rem] flex-1 min-h-screen transition-all duration-300">
 
         {/* Top bar */}
         <div className="sticky top-0 z-30 bg-[#f4f4f0]/80 backdrop-blur-md border-b border-black/5 px-8 py-4 flex items-center justify-between">

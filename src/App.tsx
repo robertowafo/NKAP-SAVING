@@ -48,9 +48,12 @@ import MoucharakaPage from './pages/financeIslamique/MoucharakaPage';
 import FCPIslamiquePage from './pages/financeIslamique/FCPIslamiquePage';
 import ComiteChariaPage from './pages/financeIslamique/ComiteChariaPage';
 
+import ScrollToTop from './components/ScrollToTop';
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
