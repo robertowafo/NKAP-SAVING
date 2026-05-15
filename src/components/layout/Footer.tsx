@@ -1,88 +1,137 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Linkedin, Twitter, Youtube, Facebook } from 'lucide-react';
-
-const LINKS = {
-  'Investir': [
-    { label: 'Fractions de titres', href: '/investir/fractions' },
-    { label: 'Tokenisation', href: '/investir/tokenisation' },
-    { label: 'Copy Investment', href: '/investir/copy-investment' },
-    { label: 'Co-Investissement', href: '/investir/co-investissement' },
-  ],
-  'Finance Islamique': [
-    { label: 'Sukuk', href: '/finance-islamique/sukuk' },
-    { label: 'Mourabaha', href: '/finance-islamique/mourabaha' },
-    { label: 'Crowdfunding Halal', href: '/finance-islamique/crowdfunding-halal' },
-    { label: 'FCP Islamique', href: '/finance-islamique/fcp-islamique' },
-    { label: 'Comité Charia', href: '/finance-islamique/comite-charia' },
-  ],
-  'Plateforme': [
-    { label: 'Découvrir', href: '/decouvrir' },
-    { label: 'Marchés', href: '/marches' },
-    { label: 'Actualités', href: '/actualites' },
-    { label: 'Apprendre', href: '/apprendre' },
-    { label: 'Opportunités', href: '/opportunites' },
-  ],
-  'Compte': [
-    { label: 'Connexion', href: '/connexion' },
-    { label: 'Inscription', href: '/inscription' },
-    { label: 'Espace Professionnel', href: '/professionnel' },
-  ],
-};
+import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/5 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-16">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="font-black text-2xl tracking-tighter text-white">
-              NKAP<span className="text-[#bef264]">INVEST</span>
-            </Link>
-            <p className="text-white/30 text-sm mt-4 leading-relaxed">
-              La plateforme d'investissement et de financement de l'Afrique Centrale.
-            </p>
-            <div className="flex gap-3 mt-6">
-              {[Facebook, Instagram, Twitter, Linkedin, Youtube].map((Icon, i) => (
-                <a key={i} href="#"
-                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-[#bef264] hover:border-[#bef264]/30 transition-colors">
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
-          </div>
+    <div className="px-4 pb-4 sm:px-6 lg:px-8 mt-24">
+      <footer className="relative bg-[#0b2820] text-white pt-20 pb-0 px-8 md:px-16 rounded-[2rem] overflow-hidden">
 
-          {/* Links */}
-          {Object.entries(LINKS).map(([section, items]) => (
-            <div key={section}>
-              <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-5">{section}</h4>
-              <ul className="space-y-3">
-                {items.map((item) => (
-                  <li key={item.href}>
-                    <Link to={item.href}
-                      className="text-sm text-white/50 hover:text-white transition-colors font-medium">
+        {/* ── Background effects ───────────────────────────── */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Top-right glow */}
+          <div className="absolute -top-[20%] -right-[10%] w-[60%] h-[150%] bg-[#1b5e4c] blur-[120px] opacity-60 rotate-[30deg] rounded-full" />
+          {/* Bottom-left shadow */}
+          <div className="absolute top-[30%] -left-[20%] w-[50%] h-[80%] bg-[#081c16] blur-[100px] opacity-80 -rotate-12 rounded-full" />
+          {/* Glass fold — right */}
+          <div className="absolute -top-[10%] right-[15%] w-[30%] h-[120%] bg-gradient-to-r from-white/5 to-transparent -skew-x-[15deg] origin-top-left border-l border-white/5 blur-[1px]" />
+          {/* Glass fold — left */}
+          <div className="absolute top-[20%] -left-[10%] w-[40%] h-[120%] bg-gradient-to-r from-transparent to-white/5 skew-x-[15deg] origin-bottom-right border-r border-white/5 blur-[1px]" />
+        </div>
+
+        {/* ── Content ─────────────────────────────────────── */}
+        <div className="relative z-10 max-w-7xl mx-auto">
+
+          {/* Link columns */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
+
+            {/* Finance Halal */}
+            <div>
+              <h4 className="font-bold text-base mb-8 text-[#4ade80]">Finance Halal</h4>
+              <ul className="space-y-4">
+                {[
+                  { label: 'Sukuk Tokenisés', path: '/finance-islamique/sukuk' },
+                  { label: 'Mourabaha / Ijara', path: '/finance-islamique/mourabaha' },
+                  { label: 'Crowdfunding Halal', path: '/finance-islamique/crowdfunding-halal' },
+                  { label: 'FCP Islamique', path: '/finance-islamique/fcp-islamique' },
+                  { label: 'Comité Charia', path: '/finance-islamique/comite-charia' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      to={item.path}
+                      className="text-sm font-medium text-white/70 hover:text-[#4ade80] transition-colors"
+                    >
                       {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-          ))}
-        </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-white/20 text-xs">
-            © 2026 NKAP INVEST. Tous droits réservés. Régulé COSUMAF · COBAC · BEAC.
-          </p>
-          <div className="flex gap-6">
-            {['Confidentialité', 'CGU', 'Mentions légales'].map((label) => (
-              <a key={label} href="#" className="text-xs text-white/20 hover:text-white/50 transition-colors">
-                {label}
-              </a>
-            ))}
+            {/* Pages */}
+            <div>
+              <h4 className="font-bold text-base mb-8 text-white">Pages</h4>
+              <ul className="space-y-4">
+                {[
+                  { label: 'À propos', path: '#' },
+                  { label: 'Investissements', path: '/investir' },
+                  { label: 'Opportunités', path: '/opportunites' },
+                  { label: 'Actualités', path: '/actualites' },
+                  { label: 'Nous contacter', path: '#' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      to={item.path}
+                      className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Suivez-nous */}
+            <div>
+              <h4 className="font-bold text-base mb-8 text-white">Suivez-nous</h4>
+              <ul className="space-y-4">
+                <li>
+                  <a href="#" className="flex items-center gap-3 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                    <Facebook className="w-5 h-5" /> Facebook
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center gap-3 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                    <Instagram className="w-5 h-5" /> Instagram
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center gap-3 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                    X
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center gap-3 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                    <Linkedin className="w-5 h-5" /> LinkedIn
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="flex items-center gap-3 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                    <Youtube className="w-5 h-5" /> Youtube
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* ── Giant NKAP ──────────────────────────────────── */}
+          <div className="flex justify-center overflow-hidden -mx-8 md:-mx-16">
+            <h2
+              className="font-bold text-white leading-[0.82] tracking-tighter select-none whitespace-nowrap"
+              style={{ fontSize: 'clamp(80px, 22vw, 320px)' }}
+            >
+              NKAP
+            </h2>
+          </div>
+
+          {/* ── Bottom bar ──────────────────────────────────── */}
+          <div className="border-t border-white/15 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-white/60 text-sm font-medium">
+              © 2026 NKAP INVEST. Fait par NKAP.
+            </p>
+            <div className="flex flex-wrap gap-6 justify-center">
+              {['Page 404', 'Guide de style', 'Licences', 'Journal des modifications'].map((label) => (
+                <Link key={label} to="#"
+                  className="text-sm font-medium text-white/60 hover:text-white transition-colors">
+                  {label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
   );
 }

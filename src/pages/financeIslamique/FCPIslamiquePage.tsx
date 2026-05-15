@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Layers, TrendingUp, XCircle, CheckCircle2, BarChart3, Lock, ArrowRight, ChevronDown, Users, Coins, ShieldCheck } from 'lucide-react';
 
-const img = (name: string) => encodeURI(`/images/${name}`);
+const img = (name: string) => encodeURI(`/${name}`);
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -175,7 +175,7 @@ export default function FCPIslamiquePage() {
       {/* ── HERO ── */}
       <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_50%_0%,#1A7A4A30_0%,transparent_60%)]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,#bef26412_0%,transparent_60%)]" />
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
@@ -282,7 +282,7 @@ export default function FCPIslamiquePage() {
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="relative">
               <div className="relative rounded-[3rem] overflow-hidden aspect-[4/5]">
-                <img src={img('Finance Islamique.jpeg')} alt="Screening Charia" className="w-full h-full object-cover" />
+                <img src={img('Screening Charia visualization.jpeg')} alt="Screening Charia" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/70 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="bg-[#0a0a0a]/90 backdrop-blur-xl rounded-3xl p-6 border border-white/10">
@@ -318,7 +318,7 @@ export default function FCPIslamiquePage() {
 
       {/* ── FONDS GRID ── */}
       <section id="fonds" className="py-32 px-6 bg-[#0a0a0a] text-white overflow-hidden relative">
-        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '260px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '260px', backgroundRepeat: 'repeat' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#bef264]/8 blur-[120px] pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-24">
@@ -379,9 +379,9 @@ export default function FCPIslamiquePage() {
 
       {/* ── IMMERSIVE ── */}
       <section className="relative h-[65vh] min-h-[480px] overflow-hidden">
-        <img src={img('Distribution FCP.jpeg')} alt="Performance des fonds" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={img('Fund Performance visualization.jpeg')} alt="Performance des fonds" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-l from-[#0a0a0a]/85 via-[#0a0a0a]/50 to-transparent" />
-        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
         <div className="relative z-10 h-full flex items-center justify-end px-6 lg:px-20">
           <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-xl text-right">
@@ -454,7 +454,7 @@ export default function FCPIslamiquePage() {
 
       {/* ── PROCESS ── */}
       <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
         <div className="absolute bottom-0 right-0 w-[500px] h-[400px] bg-[#bef264]/6 blur-[100px] pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-24">
@@ -500,9 +500,9 @@ export default function FCPIslamiquePage() {
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="relative rounded-[4rem] overflow-hidden">
-            <img src={img('Institutionnels.jpeg')} alt="BVMAC Yaoundé" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={img('BVMAC Stock Exchange Yaoundé.jpeg')} alt="BVMAC Yaoundé" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-[#0a0a0a]/82" />
-            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
+            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
             <div className="relative z-10 p-20 lg:p-32 text-center">
               <div className="absolute top-0 right-0 w-96 h-96 bg-[#bef264] opacity-12 blur-[150px]" />
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1A7A4A] opacity-12 blur-[150px]" />

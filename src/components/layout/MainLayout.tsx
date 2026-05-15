@@ -9,7 +9,7 @@ export function MainLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
       <Navbar />
-      <main className={noPadding ? '' : 'pt-[72px] flex-1'}>
+      <main className={noPadding ? '' : 'pt-[80px] flex-1'}>
         <Outlet />
       </main>
       <Footer />

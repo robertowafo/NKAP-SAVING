@@ -7,7 +7,7 @@ import {
   ChevronDown, Star, Users, Coins, BarChart3, Clock
 } from 'lucide-react';
 
-const img = (name: string) => encodeURI(`/images/${name}`);
+const img = (name: string) => encodeURI(`/${name}`);
 
 const PROJECTS = [
   {
@@ -22,7 +22,7 @@ const PROJECTS = [
     target: '500M FCFA',
     status: 'Pilote',
     statusColor: '#bef264',
-    image: img('Finance Islamique.jpeg'),
+    image: img('Sukuk Ijara concept.jpeg'),
     icon: Home,
     desc: 'Immeuble résidentiel 48 appartements. Revenus de loyer distribués trimestriellement.',
   },
@@ -38,7 +38,7 @@ const PROJECTS = [
     target: '500M FCFA',
     status: 'Nouveau',
     statusColor: '#1A7A4A',
-    image: img('Finance Islamique.jpeg'),
+    image: img('Al-Baraka Warehouse.jpeg'),
     icon: Building2,
     desc: 'Entrepôt logistique 5 000 m². Contrats de location signés avec 3 entreprises.',
   },
@@ -54,7 +54,7 @@ const PROJECTS = [
     target: '500M FCFA',
     status: 'Pré-lancement',
     statusColor: '#6b7280',
-    image: img('Finance Islamique.jpeg'),
+    image: img('Plantation Kribi.jpeg'),
     icon: Leaf,
     desc: '120 hectares de palmiers. Export certifié Halal vers marché GCC.',
   },
@@ -154,7 +154,7 @@ export default function SukukPage() {
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_50%_0%,#1A7A4A30_0%,transparent_60%)]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,#bef26412_0%,transparent_60%)]" />
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
@@ -258,7 +258,7 @@ export default function SukukPage() {
               {/* Decorative badge */}
               <motion.div animate={{ rotate: [0, 5, 0, -5, 0] }} transition={{ duration: 6, repeat: Infinity }}
                 className="absolute -top-6 -right-6 w-24 h-24 bg-[#bef264] rounded-[2rem] flex items-center justify-center shadow-xl">
-                <img src={img('Finance Islamique.jpeg')} alt="" className="w-14 h-14 object-contain" />
+                <img src={img('Islamic Star Ornament-Photoroom.png')} alt="" className="w-14 h-14 object-contain" />
               </motion.div>
             </motion.div>
 
@@ -298,7 +298,7 @@ export default function SukukPage() {
       {/* ── 3 TYPES DE SUKUK ─────────────────────────────────────────────── */}
       <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#1A7A4A] blur-[150px] opacity-15" />
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
@@ -371,7 +371,7 @@ export default function SukukPage() {
 
       {/* ── PROJETS DISPONIBLES ───────────────────────────────────────────── */}
       <section id="projets" className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-20">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
@@ -449,7 +449,7 @@ export default function SukukPage() {
 
       {/* ── IMAGE IMMERSIVE ───────────────────────────────────────────────── */}
       <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
-        <img src={img('tokenisation.jpeg')} alt="Immobilier tokenisé" className="w-full h-full object-cover" />
+        <img src={img('Hero visual — Tokenized Real Estate.jpeg')} alt="Immobilier tokenisé" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent" />
         <div className="absolute inset-0 flex items-center px-8 lg:px-20">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="max-w-xl">
@@ -497,7 +497,7 @@ export default function SukukPage() {
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
         <div className="max-w-4xl mx-auto relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">Questions fréquentes</p>
@@ -520,9 +520,9 @@ export default function SukukPage() {
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="relative rounded-[4rem] overflow-hidden">
-            <img src={img('Institutionnels.jpeg')} alt="BVMAC" className="w-full h-[500px] object-cover" />
+            <img src={img('BVMAC Stock Exchange Yaoundé.jpeg')} alt="BVMAC" className="w-full h-[500px] object-cover" />
             <div className="absolute inset-0 bg-gradient-to-br from-[#0a1a0f]/95 via-[#0a1a0f]/80 to-[#0a1a0f]/60" />
-            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
               <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
                 className="text-[#bef264] text-xs font-black uppercase tracking-[0.3em] mb-6">Commencer maintenant</motion.p>

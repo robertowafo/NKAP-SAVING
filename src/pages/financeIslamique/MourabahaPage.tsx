@@ -7,7 +7,7 @@ import {
   Clock, Banknote, FileText, ThumbsUp, TrendingDown, X
 } from 'lucide-react';
 
-const img = (name: string) => encodeURI(`/images/${name}`);
+const img = (name: string) => encodeURI(`/${name}`);
 
 const PRODUITS = [
   {
@@ -18,7 +18,7 @@ const PRODUITS = [
     montant: '500K – 50M FCFA',
     duree: '6 – 36 mois',
     margeMax: '12% / an',
-    image: img('Finance Islamique.jpeg'),
+    image: img('Halal Commerce illustration.jpeg'),
     secteurs: ['Commerce', 'Import/Export', 'Artisanat'],
     badge: 'Le plus demandé',
   },
@@ -30,7 +30,7 @@ const PRODUITS = [
     montant: '1M – 200M FCFA',
     duree: '12 – 60 mois',
     margeMax: '10% / an',
-    image: img('levée de fonds.jpeg'),
+    image: img('Ijara Equipment concept.jpeg'),
     secteurs: ['Industrie', 'Transport', 'BTP', 'Médical'],
     badge: 'Pour les pros',
   },
@@ -42,7 +42,7 @@ const PRODUITS = [
     montant: '250K – 25M FCFA',
     duree: '3 – 24 mois',
     margeMax: '8% / an',
-    image: img('Mobile Money.jpeg'),
+    image: img('Hero visual — Community Impact.jpeg'),
     secteurs: ['Agriculture', 'Élevage', 'Pêche'],
     badge: 'Taux réduit',
   },
@@ -54,7 +54,7 @@ const PRODUITS = [
     montant: '10M – 500M FCFA',
     duree: '24 – 120 mois',
     margeMax: '9% / an',
-    image: img('Institutionnels.jpeg'),
+    image: img('Business handshake Islamic finance.jpeg'),
     secteurs: ['Commerce', 'Industrie', 'Services'],
     badge: 'Long terme',
   },
@@ -187,7 +187,7 @@ export default function MourabahaPage() {
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_50%_0%,#1A7A4A30_0%,transparent_60%)]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,#bef26412_0%,transparent_60%)]" />
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
@@ -270,7 +270,7 @@ export default function MourabahaPage() {
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
               className="relative">
               <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
-                <img src={img('levée de fonds.jpeg')} alt="Financement PME" className="w-full h-[550px] object-cover" />
+                <img src={img('Hero visual — SME Financing.jpeg')} alt="Financement PME" className="w-full h-[550px] object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/70 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6">
@@ -287,7 +287,7 @@ export default function MourabahaPage() {
 
       {/* ── COMPARATIF HALAL vs CLASSIQUE ─────────────────────────────────── */}
       <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-20">
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#bef264] mb-6">Comparatif</p>
@@ -382,7 +382,7 @@ export default function MourabahaPage() {
 
       {/* ── IMAGE IMMERSIVE ───────────────────────────────────────────────── */}
       <section className="relative h-[50vh] min-h-[350px] overflow-hidden">
-        <img src={img('Finance Islamique.jpeg')} alt="Commerce halal" className="w-full h-full object-cover" />
+        <img src={img('Halal Commerce illustration.jpeg')} alt="Commerce halal" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-l from-[#0a0a0a]/90 via-[#0a0a0a]/50 to-transparent" />
         <div className="absolute inset-0 flex items-center justify-end px-8 lg:px-20">
           <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="max-w-lg text-right">
@@ -433,7 +433,7 @@ export default function MourabahaPage() {
 
       {/* ── FORMULAIRE & FAQ ──────────────────────────────────────────────── */}
       <section id="demande" className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
@@ -465,9 +465,9 @@ export default function MourabahaPage() {
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="relative rounded-[4rem] overflow-hidden">
-            <img src={img('Institutionnels.jpeg')} alt="" className="w-full h-[450px] object-cover" />
+            <img src={img('Business handshake Islamic finance.jpeg')} alt="" className="w-full h-[450px] object-cover" />
             <div className="absolute inset-0 bg-gradient-to-br from-[#0a1a0f]/95 via-[#0a1a0f]/80 to-transparent" />
-            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
               <h2 className="text-5xl lg:text-7xl font-black tracking-tighter text-white leading-none mb-8">
                 Financement halal<br />dès aujourd'hui.

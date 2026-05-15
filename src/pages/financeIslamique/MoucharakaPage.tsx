@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Heart, TrendingUp, Sprout, Store, School, CheckCircle2, ChevronDown, Users, Coins } from 'lucide-react';
 
-const img = (name: string) => encodeURI(`/images/${name}`);
+const img = (name: string) => encodeURI(`/${name}`);
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -20,7 +20,7 @@ const CAMPAGNES = [
     desc: "Financement de semences et matériel d'irrigation pour 45 femmes agricoles. Partage des bénéfices après récolte.",
     icon: Sprout, objectif: 3000000, collecte: 1875000, contributeurs: 67,
     restant: '18 jours', rendement: '15–20% partage profits', statut: 'En cours',
-    image: img('Mobile Money.jpeg'),
+    image: img('Cooperative Garoua campaign.jpeg'),
   },
   {
     id: 2, titre: 'École Coranique Numérique', porteur: 'Fondation Islamique Tchad',
@@ -28,7 +28,7 @@ const CAMPAGNES = [
     desc: "Prêt solidaire sans intérêt pour équipement informatique et formation des enseignants.",
     icon: School, objectif: 5000000, collecte: 3200000, contributeurs: 142,
     restant: '9 jours', rendement: 'Prêt solidaire 0%', statut: 'En cours',
-    image: img('Apprentissage.jpeg'),
+    image: img('Islamic School Digital.jpeg'),
   },
   {
     id: 3, titre: 'Boucherie Halal Certifiée', porteur: 'SARL Al-Nour',
@@ -36,7 +36,7 @@ const CAMPAGNES = [
     desc: "Participation au capital pour ouverture d'une boucherie halal certifiée. Bénéfices mensuels au prorata.",
     icon: Store, objectif: 8000000, collecte: 8000000, contributeurs: 238,
     restant: 'Financé !', rendement: '18% partage profits', statut: 'Financé',
-    image: img('Finance Islamique.jpeg'),
+    image: img('Halal Butchery.jpeg'),
   },
   {
     id: 4, titre: 'Puits Communautaire', porteur: 'ONG Eau Pour Tous',
@@ -44,7 +44,7 @@ const CAMPAGNES = [
     desc: "Financement d'un puits artésien pour 3 villages de la périphérie de Bangui.",
     icon: Heart, objectif: 2500000, collecte: 890000, contributeurs: 31,
     restant: '25 jours', rendement: 'Don ou prêt 0%', statut: 'En cours',
-    image: img('Mobile Money.jpeg'),
+    image: img('Community water well.jpeg'),
   },
 ];
 
@@ -157,7 +157,7 @@ export default function MoucharakaPage() {
       {/* ── HERO ── */}
       <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_50%_0%,#1A7A4A30_0%,transparent_60%)]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,#bef26412_0%,transparent_60%)]" />
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
@@ -235,7 +235,7 @@ export default function MoucharakaPage() {
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="relative">
               <div className="relative rounded-[3rem] overflow-hidden aspect-[4/5]">
-                <img src={img('Mobile Money.jpeg')} alt="Impact communautaire" className="w-full h-full object-cover" />
+                <img src={img('Hero visual — Community Impact.jpeg')} alt="Impact communautaire" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/60 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
@@ -302,7 +302,7 @@ export default function MoucharakaPage() {
 
       {/* ── STATS ── */}
       <section className="py-24 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '220px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '220px', backgroundRepeat: 'repeat' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1A7A4A]/20 blur-[100px] pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -390,9 +390,9 @@ export default function MoucharakaPage() {
 
       {/* ── IMMERSIVE ── */}
       <section className="relative h-[70vh] min-h-[500px] overflow-hidden">
-        <img src={img('Finance Islamique.jpeg')} alt="Agriculture Cameroun" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={img('Plantation Kribi.jpeg')} alt="Agriculture Cameroun" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/85 via-[#0a0a0a]/50 to-transparent" />
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '200px', backgroundRepeat: 'repeat' }} />
         <div className="relative z-10 h-full flex items-center px-6 lg:px-20">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-2xl">
@@ -412,7 +412,7 @@ export default function MoucharakaPage() {
 
       {/* ── PROCESS ── */}
       <section className="py-32 px-6 bg-[#0a0a0a] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
+        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#1A7A4A]/15 blur-[120px] pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mb-24">
@@ -458,9 +458,9 @@ export default function MoucharakaPage() {
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="relative rounded-[4rem] overflow-hidden">
-            <img src={img('Finance Islamique.jpeg')} alt="Commerce Halal" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={img('Al-Baraka Warehouse.jpeg')} alt="Commerce Halal" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-[#0a0a0a]/80" />
-            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
+            <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '240px', backgroundRepeat: 'repeat' }} />
             <div className="relative z-10 p-20 lg:p-32 text-center">
               <div className="absolute top-0 right-0 w-96 h-96 bg-[#bef264] opacity-15 blur-[150px]" />
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1A7A4A] opacity-15 blur-[150px]" />

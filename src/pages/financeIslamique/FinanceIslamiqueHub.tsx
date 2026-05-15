@@ -1,4 +1,4 @@
-﻿import { motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -25,7 +25,7 @@ const PRODUCTS = [
     desc: "L'obligataire islamique sur Polygon. Chaque token représente une quote-part de propriété dans un actif réel certifié Charia.",
     stat: '8–11%',
     statLabel: 'rendement annuel',
-    image: img('Finance Islamique.jpeg'),
+    image: img('Sukuk Ijara concept.jpeg'),
     accent: '#bef264',
   },
   {
@@ -36,7 +36,7 @@ const PRODUCTS = [
     desc: 'Financement islamique pour les PME CEMAC. Vente à prix majoré transparent ou leasing islamique — sans intérêt caché.',
     stat: '500M FCFA',
     statLabel: 'volume finançable',
-    image: img('Institutionnels.jpeg'),
+    image: img('Business handshake Islamic finance.jpeg'),
     accent: '#bef264',
   },
   {
@@ -47,7 +47,7 @@ const PRODUCTS = [
     desc: 'Participez à des projets communautaires en zone CEMAC. Profits partagés équitablement ou prêt solidaire à 0%.',
     stat: '478',
     statLabel: 'investisseurs actifs',
-    image: img('Mobile Money.jpeg'),
+    image: img('Hero visual — Community Impact.jpeg'),
     accent: '#bef264',
   },
   {
@@ -58,7 +58,7 @@ const PRODUCTS = [
     desc: 'Fonds Communs de Placement structurés Moudharaba. Screening Charia automatique et gestion professionnelle BVMAC.',
     stat: '+18.7%',
     statLabel: 'performance 1 an',
-    image: img('hero-background.jpeg'),
+    image: img('Hero visual — Investment Dashboard.jpeg'),
     accent: '#bef264',
   },
 ];
@@ -165,7 +165,7 @@ export default function FinanceIslamiqueHub() {
       <section className="relative flex flex-col items-center text-center px-6 pt-28 pb-0 overflow-hidden bg-[#0a1a0f]">
         {/* Islamic pattern + glows */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Finance Islamique.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: `url(${img('Islamic Pattern Background.jpeg')})`, backgroundSize: '280px', backgroundRepeat: 'repeat' }} />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[700px] bg-[radial-gradient(ellipse_at_50%_0%,#bef26428_0%,transparent_65%)]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,#1A7A4A22_0%,transparent_60%)]" />
           <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#0a1a0f] to-transparent" />
